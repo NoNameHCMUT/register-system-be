@@ -13,4 +13,5 @@ const (
 	AdminReject  = "/users/:id/reject"
 
 	HealthCheck = "/health"
+	Swagger     = "/swagger/*any"
 )

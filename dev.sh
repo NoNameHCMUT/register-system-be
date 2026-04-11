@@ -59,7 +59,7 @@ dev() {
     setup_env
     start_db
     info "Starting dev server with hot reload..."
-    air
+    go tool air -v
 }
 
 build() {
