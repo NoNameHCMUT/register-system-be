@@ -14,6 +14,8 @@ const (
 
 	AffiliationBase = "/affiliations"
 
+	ProjectBase = "/projects"
+
 	HealthCheck = "/health"
 	Swagger     = "/swagger/*any"
 )
