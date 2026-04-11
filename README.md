@@ -24,6 +24,58 @@ docker compose up -d --build db api
 docker compose run --rm seeder
 ```
 
+#### (Optional) Log plaintext passwords (test only)
+
+By default, `seed.js` does **not** print plaintext passwords. For testing, you can enable it:
+
+```bash
+SEED_LOG_PASSWORDS=true docker compose run --rm seeder
+```
+
+PowerShell (Windows):
+
+```powershell
+$env:SEED_LOG_PASSWORDS = "true"
+docker compose run --rm seeder
+```
+
+> Only use this for local testing.
+
+### Seed sample data (Local, without Docker)
+
+1) Ensure PostgreSQL is running and `.env` is configured:
+
+```bash
+cp .env.example .env
+# Edit DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME as needed
+```
+
+2) Run the API once to auto-migrate tables (GORM AutoMigrate):
+
+```bash
+./dev.sh run
+```
+
+3) Run the seeder:
+
+```bash
+npm install
+npm run seed
+```
+
+To print plaintext passwords (test only):
+
+```bash
+SEED_LOG_PASSWORDS=true npm run seed
+```
+
+PowerShell (Windows):
+
+```powershell
+$env:SEED_LOG_PASSWORDS = "true"
+npm run seed
+```
+
 Server starts at `http://localhost:8080`.
 
 Swagger UI at `http://localhost:8080/swagger/index.html`.
