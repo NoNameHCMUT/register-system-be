@@ -44,6 +44,14 @@ definitions:
       password:
         minLength: 6
         type: string
+      role:
+        allOf:
+        - $ref: '#/definitions/model.Role'
+        enum:
+        - admin
+        - student
+        - school
+        - community
       student_id:
         type: string
       username:
@@ -53,11 +61,16 @@ definitions:
     - email
     - full_name
     - password
+    - role
     - username
     type: object
   model.RegisterResponse:
     properties:
+      access_token:
+        type: string
       message:
+        type: string
+      refresh_token:
         type: string
       user:
         $ref: '#/definitions/model.UserResponse'
@@ -71,7 +84,7 @@ definitions:
     type: string
     x-enum-varnames:
     - RoleAdmin
-    - RoleUser
+    - RoleStudent
     - RoleSchool
     - RoleCommunity
   model.UserResponse:
@@ -84,14 +97,14 @@ definitions:
         type: string
       full_name:
         type: string
+      id:
+        type: integer
       is_active:
         type: boolean
       role:
         $ref: '#/definitions/model.Role'
       student_id:
         type: string
-      user_id:
-        type: integer
       username:
         type: string
     type: object

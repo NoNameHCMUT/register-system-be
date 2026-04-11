@@ -52,7 +52,7 @@ func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResp
 		Email:         req.Email,
 		StudentID:     req.StudentID,
 		AffiliationID: req.AffiliationID,
-		Role:          model.RoleStudent,
+		Role:          req.Role,
 		IsActive:      false,
 	}
 
@@ -62,9 +62,25 @@ func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResp
 
 	created, _ := b.userRepo.FindByID(user.ID)
 
+	accessToken, err := b.createToken(user, model.AccessToken, b.cfg.JWTAccessExpiry)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := b.createToken(user, model.RefreshToken, b.cfg.JWTRefreshExpiry)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := b.userRepo.UpdateRefreshToken(user.ID, refreshToken); err != nil {
+		return nil, err
+	}
+
 	return &model.RegisterResponse{
-		User:    model.ToUserResponse(created),
-		Message: "account pending admin approval",
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         model.ToUserResponse(created),
+		Message:      "account pending admin approval",
 	}, nil
 }
 
