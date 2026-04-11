@@ -32,13 +32,9 @@ func NewProjectHandler(biz business.ProjectBusiness, userRepo repo.UserRepo) *Pr
 // @Failure      500 {object} map[string]string "Server error"
 // @Router       /projects/my-list [get]
 func (h *ProjectHandler) GetMyProjects(c *gin.Context) {
-	userID, exists := c.Get("userID")
-	if !exists {
-		Error(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	userID := GetUserID(c)
+	projects, err := h.biz.GetStudentProjects(userID, h.userRepo)
 
-	projects, err := h.biz.GetStudentProjects(userID.(uint), h.userRepo)
 	if err != nil {
 		if err.Error() == "only students can access this endpoint" {
 			Error(c, http.StatusForbidden, err.Error())
