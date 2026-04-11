@@ -6,13 +6,14 @@ import (
 	"register-system-be/handler"
 	"register-system-be/middleware"
 	"register-system-be/model"
+	"register-system-be/repo"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler, cfg *config.Config) *gin.Engine {
+func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler, userRepo repo.UserRepo, cfg *config.Config) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
 
@@ -30,13 +31,13 @@ func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler,
 	}
 
 	authProtected := r.Group(constant.AuthBase)
-	authProtected.Use(middleware.Auth(cfg.JWTSecret))
+	authProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo))
 	{
 		authProtected.GET(constant.AuthMe, authHandler.Me)
 	}
 
 	admin := r.Group(constant.AdminBase)
-	admin.Use(middleware.Auth(cfg.JWTSecret), middleware.RequireRole(string(model.RoleAdmin)))
+	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.RequireRole(string(model.RoleAdmin)))
 	{
 		admin.GET(constant.AdminPending, adminHandler.ListPending)
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)

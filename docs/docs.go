@@ -416,6 +416,7 @@ const docTemplate = `{
                 "email",
                 "full_name",
                 "password",
+                "role",
                 "username"
             ],
             "properties": {
@@ -432,6 +433,19 @@ const docTemplate = `{
                     "type": "string",
                     "minLength": 6
                 },
+                "role": {
+                    "enum": [
+                        "admin",
+                        "student",
+                        "school",
+                        "community"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Role"
+                        }
+                    ]
+                },
                 "student_id": {
                     "type": "string"
                 },
@@ -443,7 +457,13 @@ const docTemplate = `{
         "model.RegisterResponse": {
             "type": "object",
             "properties": {
+                "access_token": {
+                    "type": "string"
+                },
                 "message": {
+                    "type": "string"
+                },
+                "refresh_token": {
                     "type": "string"
                 },
                 "user": {
@@ -461,7 +481,7 @@ const docTemplate = `{
             ],
             "x-enum-varnames": [
                 "RoleAdmin",
-                "RoleUser",
+                "RoleStudent",
                 "RoleSchool",
                 "RoleCommunity"
             ]
@@ -481,6 +501,9 @@ const docTemplate = `{
                 "full_name": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "is_active": {
                     "type": "boolean"
                 },
@@ -489,9 +512,6 @@ const docTemplate = `{
                 },
                 "student_id": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 },
                 "username": {
                     "type": "string"

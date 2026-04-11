@@ -81,15 +81,17 @@ case "${1:-}" in
     run)      run      ;;
     dev)      dev      ;;
     build)    build    ;;
+    seed)     ./seed.sh ;;
     db:start) setup_env; start_db ;;
     db:stop)  stop_db  ;;
     *)
-        echo "Usage: $0 {run|dev|build|db:start|db:stop}"
+        echo "Usage: $0 {run|dev|build|seed|db:start|db:stop}"
         echo ""
         echo "Commands:"
         echo "  run        Start PostgreSQL + run the server"
         echo "  dev        Start PostgreSQL + run with hot reload (air)"
         echo "  build      Compile binary to bin/server"
+        echo "  seed       Seed database with test data"
         echo "  db:start   Start PostgreSQL only"
         echo "  db:stop    Stop PostgreSQL"
         exit 1
