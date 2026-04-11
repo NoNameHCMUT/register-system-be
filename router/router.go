@@ -44,7 +44,7 @@ func Setup(
 	}
 
 	admin := r.Group(constant.AdminBase)
-	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.RequireRole(string(model.RoleAdmin)))
+	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly(), middleware.RequireRole(string(model.RoleAdmin)))
 	{
 		admin.GET(constant.AdminPending, adminHandler.ListPending)
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
@@ -54,7 +54,7 @@ func Setup(
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
 
 	projectsProtected := r.Group(constant.ProjectBase)
-	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo))
+	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
 	{
 		projectsProtected.POST("", projectHandler.Create)
 		projectsProtected.PATCH(constant.ProjectByID, projectHandler.Update)
