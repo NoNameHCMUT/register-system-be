@@ -4,20 +4,26 @@ Go + Gin backend skeleton with JWT auth and role-based access.
 
 ## Quick Start
 
-### 1. Start PostgreSQL
+### 1. Start PostgreSQL + API (Docker)
 
 ```bash
-docker compose up -d
+docker compose up -d --build db api
 ```
 
-### 2. Configure environment
+### 2. Seed sample data (Docker)
+
+```bash
+docker compose run --rm seeder
+```
+
+### 3. Configure environment
 
 ```bash
 cp .env.example .env
 # Edit .env if needed (defaults match the Docker PostgreSQL)
 ```
 
-### 3. Run the server
+### 4. Run the server (local Go)
 
 ```bash
 go run ./cmd/server
