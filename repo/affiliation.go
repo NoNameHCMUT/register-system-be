@@ -29,7 +29,7 @@ func (r *affiliationRepo) FindByID(id uint) (*model.Affiliation, error) {
 
 func (r *affiliationRepo) FindAll() ([]model.Affiliation, error) {
 	var list []model.Affiliation
-	if err := r.db.Find(&list).Error; err != nil {
+	if err := r.db.Where("id > ?", 0).Order("id asc").Find(&list).Error; err != nil {
 		return nil, err
 	}
 	return list, nil
