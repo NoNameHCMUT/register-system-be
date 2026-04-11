@@ -13,25 +13,31 @@ import (
 )
 
 type AuthBusiness interface {
-	Register(req *model.RegisterRequest) (*model.AuthResponse, error)
+	Register(req *model.RegisterRequest) (*model.RegisterResponse, error)
 	Login(req *model.LoginRequest) (*model.AuthResponse, error)
 	Refresh(req *model.RefreshRequest) (*model.AuthResponse, error)
 	GetCurrentUser(id uint) (*model.UserResponse, error)
 }
 
 type authBusiness struct {
-	userRepo  repo.UserRepo
-	tokenRepo repo.TokenRepo
-	cfg       *config.Config
+	userRepo        repo.UserRepo
+	affiliationRepo repo.AffiliationRepo
+	cfg             *config.Config
 }
 
-func NewAuthBusiness(ur repo.UserRepo, tr repo.TokenRepo, cfg *config.Config) AuthBusiness {
-	return &authBusiness{userRepo: ur, tokenRepo: tr, cfg: cfg}
+func NewAuthBusiness(ur repo.UserRepo, ar repo.AffiliationRepo, cfg *config.Config) AuthBusiness {
+	return &authBusiness{userRepo: ur, affiliationRepo: ar, cfg: cfg}
 }
 
-func (b *authBusiness) Register(req *model.RegisterRequest) (*model.AuthResponse, error) {
+func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResponse, error) {
+	if _, err := b.userRepo.FindByUsername(req.Username); err == nil {
+		return nil, errors.New("username already exists")
+	}
 	if _, err := b.userRepo.FindByEmail(req.Email); err == nil {
 		return nil, errors.New("email already exists")
+	}
+	if _, err := b.affiliationRepo.FindByID(req.AffiliationID); err != nil {
+		return nil, errors.New("affiliation not found")
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -40,27 +46,39 @@ func (b *authBusiness) Register(req *model.RegisterRequest) (*model.AuthResponse
 	}
 
 	user := &model.User{
-		Email:     req.Email,
-		Password:  string(hash),
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-		Role:      model.RoleUser,
+		Username:      req.Username,
+		FullName:      req.FullName,
+		PasswordHash:  string(hash),
+		Email:         req.Email,
+		StudentID:     req.StudentID,
+		AffiliationID: req.AffiliationID,
+		Role:          model.RoleUser,
+		IsActive:      false,
 	}
 
 	if err := b.userRepo.Create(user); err != nil {
 		return nil, err
 	}
 
-	return b.generateTokens(user)
+	created, _ := b.userRepo.FindByID(user.ID)
+
+	return &model.RegisterResponse{
+		User:    model.ToUserResponse(created),
+		Message: "account pending admin approval",
+	}, nil
 }
 
 func (b *authBusiness) Login(req *model.LoginRequest) (*model.AuthResponse, error) {
-	user, err := b.userRepo.FindByEmail(req.Email)
+	user, err := b.userRepo.FindByUsername(req.Username)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if !user.IsActive {
+		return nil, errors.New("account pending admin approval")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
 		return nil, errors.New("invalid credentials")
 	}
 
@@ -68,26 +86,21 @@ func (b *authBusiness) Login(req *model.LoginRequest) (*model.AuthResponse, erro
 }
 
 func (b *authBusiness) Refresh(req *model.RefreshRequest) (*model.AuthResponse, error) {
-	stored, err := b.tokenRepo.FindByToken(req.RefreshToken)
-	if err != nil {
+	claims := &model.Claims{}
+	token, err := jwt.ParseWithClaims(req.RefreshToken, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(b.cfg.JWTSecret), nil
+	})
+	if err != nil || !token.Valid {
 		return nil, errors.New("invalid refresh token")
 	}
 
-	if stored.Revoked {
-		return nil, errors.New("refresh token revoked")
-	}
-
-	if time.Now().After(stored.ExpiresAt) {
-		return nil, errors.New("refresh token expired")
-	}
-
-	user, err := b.userRepo.FindByID(stored.UserID)
+	user, err := b.userRepo.FindByID(claims.UserID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("user not found")
 	}
 
-	if err := b.tokenRepo.Revoke(req.RefreshToken); err != nil {
-		return nil, err
+	if user.RefreshToken != req.RefreshToken {
+		return nil, errors.New("refresh token revoked")
 	}
 
 	return b.generateTokens(user)
@@ -103,22 +116,17 @@ func (b *authBusiness) GetCurrentUser(id uint) (*model.UserResponse, error) {
 }
 
 func (b *authBusiness) generateTokens(user *model.User) (*model.AuthResponse, error) {
-	accessToken, err := b.createToken(user, b.cfg.JWTAccessExpiry)
+	accessToken, err := b.createToken(user, model.AccessToken, b.cfg.JWTAccessExpiry)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err := b.createToken(user, b.cfg.JWTRefreshExpiry)
+	refreshToken, err := b.createToken(user, model.RefreshToken, b.cfg.JWTRefreshExpiry)
 	if err != nil {
 		return nil, err
 	}
 
-	rt := &model.RefreshToken{
-		UserID:    user.ID,
-		Token:     refreshToken,
-		ExpiresAt: time.Now().Add(b.cfg.JWTRefreshExpiry),
-	}
-	if err := b.tokenRepo.Create(rt); err != nil {
+	if err := b.userRepo.UpdateRefreshToken(user.ID, refreshToken); err != nil {
 		return nil, err
 	}
 
@@ -129,11 +137,12 @@ func (b *authBusiness) generateTokens(user *model.User) (*model.AuthResponse, er
 	}, nil
 }
 
-func (b *authBusiness) createToken(user *model.User, expiry time.Duration) (string, error) {
+func (b *authBusiness) createToken(user *model.User, tokenType model.TokenType, expiry time.Duration) (string, error) {
 	claims := model.Claims{
-		UserID: user.ID,
-		Email:  user.Email,
-		Role:   user.Role,
+		UserID:    user.ID,
+		Email:     user.Email,
+		Role:      user.Role,
+		TokenType: tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiry)),
 		},

@@ -16,11 +16,15 @@ func main() {
 	repo.Migrate(db)
 
 	userRepo := repo.NewUserRepo(db)
-	tokenRepo := repo.NewTokenRepo(db)
-	authBiz := business.NewAuthBusiness(userRepo, tokenRepo, cfg)
-	authHandler := handler.NewAuthHandler(authBiz)
+	affiliationRepo := repo.NewAffiliationRepo(db)
 
-	r := router.Setup(authHandler, cfg)
+	authBiz := business.NewAuthBusiness(userRepo, affiliationRepo, cfg)
+	adminBiz := business.NewAdminBusiness(userRepo)
+
+	authHandler := handler.NewAuthHandler(authBiz)
+	adminHandler := handler.NewAdminHandler(adminBiz)
+
+	r := router.Setup(authHandler, adminHandler, cfg)
 	log.Printf("Server starting on :%s", cfg.ServerPort)
 	if err := r.Run(":" + cfg.ServerPort); err != nil {
 		log.Fatal(err)

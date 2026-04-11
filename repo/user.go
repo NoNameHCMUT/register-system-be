@@ -8,8 +8,12 @@ import (
 
 type UserRepo interface {
 	Create(user *model.User) error
+	FindByUsername(username string) (*model.User, error)
 	FindByEmail(email string) (*model.User, error)
 	FindByID(id uint) (*model.User, error)
+	FindPending() ([]model.User, error)
+	UpdateActive(userID uint, active bool) error
+	UpdateRefreshToken(userID uint, token string) error
 }
 
 type userRepo struct {
@@ -32,10 +36,34 @@ func (r *userRepo) FindByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *userRepo) FindByID(id uint) (*model.User, error) {
+func (r *userRepo) FindByUsername(username string) (*model.User, error) {
 	var user model.User
-	if err := r.db.First(&user, id).Error; err != nil {
+	if err := r.db.Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userRepo) FindByID(id uint) (*model.User, error) {
+	var user model.User
+	if err := r.db.Preload("Affiliation").First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *userRepo) FindPending() ([]model.User, error) {
+	var users []model.User
+	if err := r.db.Preload("Affiliation").Where("is_active = ?", false).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (r *userRepo) UpdateActive(userID uint, active bool) error {
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("is_active", active).Error
+}
+
+func (r *userRepo) UpdateRefreshToken(userID uint, token string) error {
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("refresh_token", token).Error
 }

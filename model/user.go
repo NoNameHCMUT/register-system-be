@@ -1,57 +1,46 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type Role string
 
 const (
-	RoleAdmin Role = "admin"
-	RoleUser  Role = "user"
+	RoleAdmin     Role = "admin"
+	RoleUser      Role = "student"
+	RoleSchool    Role = "school"
+	RoleCommunity Role = "community"
 )
 
 type User struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	Email     string    `gorm:"uniqueIndex;not null" json:"email"`
-	Password  string    `gorm:"not null" json:"-"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Role      Role      `gorm:"type:varchar(20);default:'user'" json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID            uint        `gorm:"primaryKey;column:user_id" json:"user_id"`
+	Username      string      `gorm:"uniqueIndex;not null" json:"username"`
+	FullName      string      `gorm:"not null" json:"full_name"`
+	PasswordHash  string      `gorm:"not null" json:"-"`
+	Role          Role        `gorm:"type:varchar(20);default:'user'" json:"role"`
+	IsActive      bool        `gorm:"default:false" json:"is_active"`
+	CreatedAt     time.Time   `json:"created_at"`
+	StudentID     string      `json:"student_id"`
+	Email         string      `gorm:"uniqueIndex;not null" json:"email"`
+	AffiliationID uint        `gorm:"not null" json:"affiliation_id"`
+	Affiliation   Affiliation `gorm:"foreignKey:AffiliationID" json:"affiliation,omitempty"`
+	RefreshToken  string      `json:"-"`
 }
 
-type RegisterRequest struct {
-	Email     string `json:"email" binding:"required,email"`
-	Password  string `json:"password" binding:"required,min=6"`
-	FirstName string `json:"first_name" binding:"required"`
-	LastName  string `json:"last_name" binding:"required"`
-}
+type TokenType string
 
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
-}
+const (
+	AccessToken  TokenType = "access"
+	RefreshToken TokenType = "refresh"
+)
 
-type AuthResponse struct {
-	AccessToken  string       `json:"access_token"`
-	RefreshToken string       `json:"refresh_token"`
-	User         UserResponse `json:"user"`
-}
-
-type UserResponse struct {
-	ID        uint   `json:"id"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Role      Role   `json:"role"`
-}
-
-func ToUserResponse(u *User) UserResponse {
-	return UserResponse{
-		ID:        u.ID,
-		Email:     u.Email,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Role:      u.Role,
-	}
+type Claims struct {
+	UserID    uint      `json:"user_id"`
+	Email     string    `json:"email"`
+	Role      Role      `json:"role"`
+	TokenType TokenType `json:"token_type"`
+	jwt.RegisteredClaims
 }
