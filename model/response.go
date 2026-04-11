@@ -7,8 +7,10 @@ type AuthResponse struct {
 }
 
 type RegisterResponse struct {
-	User    UserResponse `json:"user"`
-	Message string       `json:"message"`
+	AccessToken  string       `json:"access_token"`
+	RefreshToken string       `json:"refresh_token"`
+	User         UserResponse `json:"user"`
+	Message      string       `json:"message"`
 }
 
 type UserResponse struct {

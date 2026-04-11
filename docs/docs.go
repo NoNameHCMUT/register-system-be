@@ -457,7 +457,13 @@ const docTemplate = `{
         "model.RegisterResponse": {
             "type": "object",
             "properties": {
+                "access_token": {
+                    "type": "string"
+                },
                 "message": {
+                    "type": "string"
+                },
+                "refresh_token": {
                     "type": "string"
                 },
                 "user": {
