@@ -74,7 +74,7 @@ swagger() {
         warn "swag not installed. Installing..."
         go install github.com/swaggo/swag/cmd/swag@latest
     fi
-    swag init -g cmd/server/main.go -o docs
+    $(go env GOPATH)/bin/swag init -g cmd/server/main.go -o docs
     info "Done"
 }
 
