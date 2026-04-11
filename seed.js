@@ -1,5 +1,9 @@
 const { Client } = require('pg');
 require('dotenv').config(); // Tải biến môi trường từ file .env
+const bcrypt = require('bcryptjs');
+
+// Only for local testing: set SEED_LOG_PASSWORDS=true to print plaintext passwords in console logs.
+const SHOULD_LOG_PASSWORDS = String(process.env.SEED_LOG_PASSWORDS || '').toLowerCase() === 'true';
 
 // Cấu hình kết nối sử dụng các biến môi trường
 const client = new Client({
@@ -43,7 +47,7 @@ async function seedData() {
       {
         username: 'admin_root',
         full_name: 'Quản Trị Viên Tổng',
-        password_hash: '$2a$12$fakehash_admin123',
+        password_plaintext: 'admin123',
         role: 'admin',
         student_id: 'HQ-001',
         email: 'admin@mhx_system.vn',
@@ -52,7 +56,7 @@ async function seedData() {
       {
         username: 'cb_bachkhoa',
         full_name: 'Nguyễn Văn Cán Bộ',
-        password_hash: '$2a$12$fakehash_school456',
+        password_plaintext: 'school456',
         role: 'school',
         student_id: 'CB-BK-01',
         email: 'canbo@hcmut.edu.vn',
@@ -61,7 +65,7 @@ async function seedData() {
       {
         username: 'leader_binh_phuoc',
         full_name: 'Trần Văn Địa Phương',
-        password_hash: '$2a$12$fakehash_local789',
+        password_plaintext: 'local789',
         role: 'community',
         student_id: 'LOC-BP-01',
         email: 'leader@binhphuoc.gov.vn',
@@ -71,7 +75,7 @@ async function seedData() {
       {
         username: 'student_nhu',
         full_name: 'Nguyễn Quỳnh Như',
-        password_hash: '$2a$12$fakehash_student_nhu',
+        password_plaintext: 'student_nhu',
         role: 'student',
         student_id: 'SV2026_BK01',
         email: 'nhu.nguyen@student.hcmut.edu.vn',
@@ -88,21 +92,29 @@ async function seedData() {
     // Thực hiện chèn dữ liệu
     console.log('>> Seeding users (chi tiết từng tài khoản):');
     for (const user of users) {
+        if (!user.password_plaintext) {
+            throw new Error(`Missing password_plaintext for user ${user.username}`);
+        }
+
+        const password_hash = await bcrypt.hash(user.password_plaintext, 12);
+
       const query = `
         INSERT INTO users (username, full_name, password_hash, role, is_active, student_id, email, affiliation_id) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING user_id
       `;
       const values = [
-        user.username, user.full_name, user.password_hash, user.role, 
+        user.username, user.full_name, password_hash, user.role, 
         true, user.student_id, user.email, user.affiliation_id
       ];
 
       const inserted = await client.query(query, values);
       const insertedId = inserted?.rows?.[0]?.user_id;
 
+      const pwLog = SHOULD_LOG_PASSWORDS ? ` | password_plaintext=${user.password_plaintext}` : '';
+
       console.log(
-        `   - user_id=${insertedId} | username=${user.username} | role=${user.role} | full_name=${user.full_name} | student_id=${user.student_id} | email=${user.email} | affiliation=${affIdToName[user.affiliation_id] || user.affiliation_id}`
+        `   - user_id=${insertedId} | username=${user.username} | role=${user.role} | full_name=${user.full_name} | student_id=${user.student_id} | email=${user.email} | affiliation=${affIdToName[user.affiliation_id] || user.affiliation_id}${pwLog}`
       );
     }
 
