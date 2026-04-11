@@ -16,7 +16,7 @@ const (
 )
 
 type User struct {
-	ID            uint        `gorm:"primaryKey;column:user_id" json:"user_id"`
+	ID            uint        `gorm:"primaryKey" json:"id"`
 	Username      string      `gorm:"uniqueIndex;not null" json:"username"`
 	FullName      string      `gorm:"not null" json:"full_name"`
 	PasswordHash  string      `gorm:"not null" json:"-"`
