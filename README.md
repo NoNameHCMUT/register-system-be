@@ -4,46 +4,46 @@ Go + Gin backend skeleton with JWT auth and role-based access.
 
 ## Quick Start
 
-### 1. Start PostgreSQL
-
 ```bash
-docker compose up -d
-```
+# 1. Start PostgreSQL
+./dev.sh db:start
 
-### 2. Configure environment
-
-```bash
-cp .env.example .env
-# Edit .env if needed (defaults match the Docker PostgreSQL)
-```
-
-### 3. Run the server
-
-```bash
-go run ./cmd/server
+# 2. Run the server
+./dev.sh run
 ```
 
 Server starts at `http://localhost:8080`.
 
-## Running without Docker (existing PostgreSQL)
+## All Commands
 
-Set the env vars in `.env` to point to your local PostgreSQL instance:
+| Command | Description |
+|---------|-------------|
+| `./dev.sh run` | Start DB + run the server |
+| `./dev.sh dev` | Start DB + run with hot reload (air) |
+| `./dev.sh build` | Compile binary to `bin/server` |
+| `./dev.sh db:start` | Start PostgreSQL only |
+| `./dev.sh db:stop` | Stop PostgreSQL |
+
+## Running without Docker (existing PostgreSQL)
 
 ```bash
 cp .env.example .env
 # Edit DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME as needed
-go run ./cmd/server
+./dev.sh run
 ```
 
 ## API Endpoints
 
-| Method | Path           | Auth | Description   |
-|--------|----------------|------|---------------|
-| POST   | /auth/register | No   | Register user |
-| POST   | /auth/login    | No   | Login         |
-| POST   | /auth/refresh  | No   | Refresh tokens|
-| GET    | /auth/me       | Yes  | Current user  |
-| GET    | /health        | No   | Health check  |
+| Method | Path              | Auth  | Description          |
+|--------|-------------------|-------|----------------------|
+| POST   | /auth/register    | No    | Register user        |
+| POST   | /auth/login       | No    | Login                |
+| POST   | /auth/refresh     | No    | Refresh tokens       |
+| GET    | /auth/me          | Yes   | Current user         |
+| GET    | /admin/users/pending | Admin | List pending users |
+| POST   | /admin/users/:id/accept | Admin | Accept user  |
+| POST   | /admin/users/:id/reject | Admin | Reject user  |
+| GET    | /health           | No    | Health check         |
 
 ## Adding a New Endpoint
 
