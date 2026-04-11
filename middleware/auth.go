@@ -43,13 +43,23 @@ func Auth(secret string, userRepo repo.UserRepo) gin.HandlerFunc {
 		c.Set("user_id", claims.UserID)
 		c.Set("email", claims.Email)
 		c.Set("role", string(claims.Role))
+		c.Set("is_active", false)
 
 		user, err := userRepo.FindByID(claims.UserID)
-		if err != nil || !user.IsActive {
+		if err == nil {
+			c.Set("is_active", user.IsActive)
+		}
+
+		c.Next()
+	}
+}
+
+func ActiveOnly() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if !c.GetBool("is_active") {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "account not active"})
 			return
 		}
-
 		c.Next()
 	}
 }
