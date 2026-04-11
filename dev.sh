@@ -30,9 +30,21 @@ stop_db() {
     docker compose down
 }
 
+setup() {
+    info "Installing Go dependencies..."
+    go mod tidy
+    info "Generating swagger docs..."
+    if ! command -v swag &> /dev/null && [ ! -f "$(go env GOPATH)/bin/swag" ]; then
+        warn "swag not installed. Installing..."
+        go install github.com/swaggo/swag/cmd/swag@latest
+    fi
+    $(go env GOPATH)/bin/swag init -g cmd/server/main.go -o docs
+}
+
 run() {
     setup_env
     start_db
+    setup
     info "Running server..."
     go run ./cmd/server
 }
@@ -44,6 +56,7 @@ dev() {
     fi
     setup_env
     start_db
+    setup
     info "Starting dev server with hot reload..."
     air
 }
