@@ -7,6 +7,7 @@ type RegisterRequest struct {
 	Email         string `json:"email" binding:"required,email"`
 	StudentID     string `json:"student_id"`
 	AffiliationID uint   `json:"affiliation_id" binding:"required"`
+	Role          Role   `json:"role" binding:"required,oneof=admin student school community"`
 }
 
 type LoginRequest struct {

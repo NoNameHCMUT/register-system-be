@@ -10,7 +10,7 @@ type Role string
 
 const (
 	RoleAdmin     Role = "admin"
-	RoleUser      Role = "student"
+	RoleStudent   Role = "student"
 	RoleSchool    Role = "school"
 	RoleCommunity Role = "community"
 )
@@ -20,7 +20,7 @@ type User struct {
 	Username      string      `gorm:"uniqueIndex;not null" json:"username"`
 	FullName      string      `gorm:"not null" json:"full_name"`
 	PasswordHash  string      `gorm:"not null" json:"-"`
-	Role          Role        `gorm:"type:varchar(20);default:'user'" json:"role"`
+	Role          Role        `gorm:"type:varchar(20);default:'student'" json:"role"`
 	IsActive      bool        `gorm:"default:false" json:"is_active"`
 	CreatedAt     time.Time   `json:"created_at"`
 	StudentID     string      `json:"student_id"`

@@ -16,6 +16,16 @@ Server starts at `http://localhost:8080`.
 
 Swagger UI at `http://localhost:8080/swagger/index.html`.
 
+## Swagger
+
+Swagger UI is served at `/swagger/index.html` when the server is running.
+
+Docs are auto-generated from annotations in handler files. After changing endpoints:
+
+```bash
+~/go/bin/swag init -g cmd/server/main.go -o docs
+```
+
 ## All Commands
 
 | Command | Description |
