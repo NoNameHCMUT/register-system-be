@@ -17,8 +17,9 @@ func Setup(
 	authHandler *handler.AuthHandler,
 	adminHandler *handler.AdminHandler,
 	affiliationHandler *handler.AffiliationHandler,
-	cfg *config.Config,
+	projectHandler *handler.ProjectHandler,
 	userRepo repo.UserRepo,
+	cfg *config.Config,
 ) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
@@ -51,6 +52,12 @@ func Setup(
 	}
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
+
+	projects := r.Group(constant.ProjectBase)
+	projects.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.RequireRole(string(model.RoleCommunity)))
+	{
+		projects.POST(constant.ProjectCreate, projectHandler.Create)
+	}
 
 	return r
 }

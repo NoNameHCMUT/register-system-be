@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type AuthResponse struct {
 	AccessToken  string       `json:"access_token"`
 	RefreshToken string       `json:"refresh_token"`
@@ -30,6 +32,21 @@ type AffiliationResponse struct {
 	StdName string `json:"std_name"`
 }
 
+type ProjectResponse struct {
+	ID              uint      `json:"id"`
+	AffiliationID   uint      `json:"affiliation_id"`
+	CommunityUserID uint      `json:"community_user_id"`
+	Name            string    `json:"name"`
+	Description     string    `json:"description"`
+	NumMax          uint      `json:"num_max"`
+	ProjectStartDay time.Time `json:"project_start_day"`
+	ProjectEndDay   time.Time `json:"project_end_day"`
+	FormStartDay    time.Time `json:"form_start_day"`
+	FormEndDay      time.Time `json:"form_end_day"`
+	NumAttending    uint      `json:"num_attending"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
 func ToUserResponse(u *User) UserResponse {
 	resp := UserResponse{
 		ID:            u.ID,
@@ -48,4 +65,21 @@ func ToUserResponse(u *User) UserResponse {
 		}
 	}
 	return resp
+}
+
+func ToProjectResponse(p *Project) ProjectResponse {
+	return ProjectResponse{
+		ID:              p.ID,
+		AffiliationID:   p.AffiliationID,
+		CommunityUserID: p.CommunityUserID,
+		Name:            p.Name,
+		Description:     p.Description,
+		NumMax:          p.NumMax,
+		ProjectStartDay: p.ProjectStartDay,
+		ProjectEndDay:   p.ProjectEndDay,
+		FormStartDay:    p.FormStartDay,
+		FormEndDay:      p.FormEndDay,
+		NumAttending:    p.NumAttending,
+		CreatedAt:       p.CreatedAt,
+	}
 }
