@@ -14,6 +14,8 @@ Go + Gin backend skeleton with JWT auth and role-based access.
 
 Server starts at `http://localhost:8080`.
 
+Swagger UI at `http://localhost:8080/swagger/index.html`.
+
 ## All Commands
 
 | Command | Description |
@@ -34,16 +36,17 @@ cp .env.example .env
 
 ## API Endpoints
 
-| Method | Path              | Auth  | Description          |
-|--------|-------------------|-------|----------------------|
-| POST   | /auth/register    | No    | Register user        |
-| POST   | /auth/login       | No    | Login                |
-| POST   | /auth/refresh     | No    | Refresh tokens       |
-| GET    | /auth/me          | Yes   | Current user         |
-| GET    | /admin/users/pending | Admin | List pending users |
-| POST   | /admin/users/:id/accept | Admin | Accept user  |
-| POST   | /admin/users/:id/reject | Admin | Reject user  |
-| GET    | /health           | No    | Health check         |
+| Method | Path                   | Auth  | Description       |
+|--------|------------------------|-------|-------------------|
+| POST   | /auth/register         | No    | Register user     |
+| POST   | /auth/login            | No    | Login             |
+| POST   | /auth/refresh          | No    | Refresh tokens    |
+| GET    | /auth/me               | Yes   | Current user      |
+| GET    | /admin/users/pending   | Admin | List pending users|
+| POST   | /admin/users/:id/accept| Admin | Accept user       |
+| POST   | /admin/users/:id/reject| Admin | Reject user      |
+| GET    | /health                | No    | Health check      |
+| GET    | /swagger/*any          | No    | Swagger UI        |
 
 ## Adding a New Endpoint
 
@@ -65,4 +68,5 @@ cp .env.example .env
 ├── config/           # Env config
 ├── constant/         # API endpoint paths
 ├── router/           # Route registration
+├── docs/             # Swagger spec
 ```
