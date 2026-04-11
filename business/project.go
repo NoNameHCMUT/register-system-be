@@ -9,6 +9,7 @@ import (
 )
 
 type ProjectBusiness interface {
+	GetStudentProjects(userID uint, userRepo repo.UserRepo) ([]model.ProjectResponse, error)
 	Create(creatorID uint, creatorRole model.Role, req *model.ProjectCreateRequest) (*model.ProjectResponse, error)
 	Update(projectID uint, actorID uint, actorRole model.Role, req *model.ProjectUpdateRequest) (*model.ProjectResponse, error)
 }
@@ -21,6 +22,26 @@ type projectBusiness struct {
 
 func NewProjectBusiness(pr repo.ProjectRepo, ar repo.AffiliationRepo, ur repo.UserRepo) ProjectBusiness {
 	return &projectBusiness{projectRepo: pr, affiliationRepo: ar, userRepo: ur}
+}
+
+func (b *projectBusiness) GetStudentProjects(userID uint, userRepo repo.UserRepo) ([]model.ProjectResponse, error) {
+	user, err := userRepo.FindByID(userID)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	if user.Role != model.RoleStudent && user.Role != model.RoleSchool {
+		return nil, errors.New("you are not belong to me baby")
+	}
+	projects, err := b.projectRepo.GetByAffiliationID(user.AffiliationID)
+	if err != nil {
+		return nil, errors.New("failed to fetch projects")
+	}
+	responses := make([]model.ProjectResponse, 0, len(projects))
+	for _, p := range projects {
+		responses = append(responses, model.ToProjectResponse(&p))
+	}
+
+	return responses, nil
 }
 
 func parseRFC3339(s string) (time.Time, error) {

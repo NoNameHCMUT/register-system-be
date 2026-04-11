@@ -7,8 +7,9 @@ import (
 )
 
 type ProjectRepo interface {
-	Create(p *model.Project) error
+	GetByAffiliationID(affiliationID uint) ([]model.Project, error)
 	FindByID(id uint) (*model.Project, error)
+	Create(p *model.Project) error
 	Update(p *model.Project) error
 	CountAttending(projectID uint) (uint, error)
 }
@@ -21,16 +22,35 @@ func NewProjectRepo(db *gorm.DB) ProjectRepo {
 	return &projectRepo{db: db}
 }
 
-func (r *projectRepo) Create(p *model.Project) error {
-	return r.db.Create(p).Error
+
+// GetByAffiliationID lấy tất cả project của một affiliation
+func (r *projectRepo) GetByAffiliationID(affiliationID uint) ([]model.Project, error) {
+	var projects []model.Project
+	if err := r.db.
+		Preload("Affiliation").
+		Preload("CommunityUser").
+		Where("affiliation_id = ?", affiliationID).
+		Order("created_at DESC").
+		Find(&projects).Error; err != nil {
+		return nil, err
+	}
+	return projects, nil
 }
+
 
 func (r *projectRepo) FindByID(id uint) (*model.Project, error) {
 	var p model.Project
-	if err := r.db.Preload("Affiliation").Preload("CommunityUser").First(&p, id).Error; err != nil {
+	if err := r.db.
+		Preload("Affiliation").
+		Preload("CommunityUser").
+		First(&p, id).Error; err != nil {
 		return nil, err
 	}
 	return &p, nil
+}
+
+func (r *projectRepo) Create(p *model.Project) error {
+	return r.db.Create(p).Error
 }
 
 func (r *projectRepo) Update(p *model.Project) error {

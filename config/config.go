@@ -13,6 +13,8 @@ type Config struct {
 	DBUser           string
 	DBPassword       string
 	DBName           string
+	DBSSLMode        string
+	DBChannelBinding string
 	JWTSecret        string
 	JWTAccessExpiry  time.Duration
 	JWTRefreshExpiry time.Duration
@@ -27,6 +29,8 @@ func Load() *Config {
 		DBUser:           getEnv("DB_USER", "postgres"),
 		DBPassword:       getEnv("DB_PASSWORD", "postgres"),
 		DBName:           getEnv("DB_NAME", "register_system"),
+		DBSSLMode:        getEnv("DB_SSLMODE", "disable"),
+		DBChannelBinding: getEnv("DB_CHANNEL_BINDING", "disable"),
 		JWTSecret:        getEnv("JWT_SECRET", "secret"),
 		JWTAccessExpiry:  mustParseDuration(getEnv("JWT_ACCESS_EXPIRY", "15m")),
 		JWTRefreshExpiry: mustParseDuration(getEnv("JWT_REFRESH_EXPIRY", "168h")),
