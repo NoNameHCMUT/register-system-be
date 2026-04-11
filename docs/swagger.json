@@ -447,6 +447,88 @@
                     }
                 }
             }
+        },
+        "/projects/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a project (owner community/admin)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Update project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update project",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -575,6 +657,36 @@
                     "type": "string"
                 },
                 "project_start_day": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProjectUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "form_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "num_max": {
+                    "type": "integer"
+                },
+                "project_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "description": "RFC3339",
                     "type": "string"
                 }
             }
