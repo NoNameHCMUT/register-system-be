@@ -6,6 +6,7 @@ import (
 	"register-system-be/handler"
 	"register-system-be/middleware"
 	"register-system-be/model"
+	"register-system-be/repo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,13 +32,13 @@ func Setup(
 	}
 
 	authProtected := r.Group(constant.AuthBase)
-	authProtected.Use(middleware.Auth(cfg.JWTSecret))
+	authProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo))
 	{
 		authProtected.GET(constant.AuthMe, authHandler.Me)
 	}
 
 	admin := r.Group(constant.AdminBase)
-	admin.Use(middleware.Auth(cfg.JWTSecret), middleware.RequireRole(string(model.RoleAdmin)))
+	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.RequireRole(string(model.RoleAdmin)))
 	{
 		admin.GET(constant.AdminPending, adminHandler.ListPending)
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
