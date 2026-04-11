@@ -4,3 +4,4 @@ node_modules/
 
 # local artifacts
 server
+.DS_Store
