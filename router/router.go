@@ -8,6 +8,8 @@ import (
 	"register-system-be/model"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler, cfg *config.Config) *gin.Engine {
@@ -17,6 +19,8 @@ func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler,
 	r.GET(constant.HealthCheck, func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+
+	r.GET(constant.Swagger, ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := r.Group(constant.AuthBase)
 	{
