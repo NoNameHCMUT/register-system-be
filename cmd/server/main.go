@@ -34,7 +34,7 @@ func main() {
 	authHandler := handler.NewAuthHandler(authBiz)
 	adminHandler := handler.NewAdminHandler(adminBiz)
 
-	r := router.Setup(authHandler, adminHandler, cfg)
+	r := router.Setup(authHandler, adminHandler, userRepo, cfg)
 	log.Printf("Server starting on :%s", cfg.ServerPort)
 	if err := r.Run(":" + cfg.ServerPort); err != nil {
 		log.Fatal(err)
