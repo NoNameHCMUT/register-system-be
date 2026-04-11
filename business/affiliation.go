@@ -28,10 +28,7 @@ func (b *affiliationBusiness) ListAll() ([]model.AffiliationResponse, error) {
 		if aff.ID == 0 {
 			continue
 		}
-		res = append(res, model.AffiliationResponse{
-			ID:      aff.ID,
-			StdName: aff.StdName,
-		})
+		res = append(res, model.AffiliationResponse(aff))
 	}
 
 	return res, nil

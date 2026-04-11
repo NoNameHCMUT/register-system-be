@@ -22,7 +22,6 @@ func NewProjectRepo(db *gorm.DB) ProjectRepo {
 	return &projectRepo{db: db}
 }
 
-
 // GetByAffiliationID lấy tất cả project của một affiliation
 func (r *projectRepo) GetByAffiliationID(affiliationID uint) ([]model.Project, error) {
 	var projects []model.Project
@@ -36,7 +35,6 @@ func (r *projectRepo) GetByAffiliationID(affiliationID uint) ([]model.Project, e
 	}
 	return projects, nil
 }
-
 
 func (r *projectRepo) FindByID(id uint) (*model.Project, error) {
 	var p model.Project

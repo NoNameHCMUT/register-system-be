@@ -31,20 +31,20 @@ type AffiliationResponse struct {
 }
 
 type ProjectResponse struct {
-	ID              uint               `json:"id"`
-	AffiliationID   uint               `json:"affiliation_id"`
+	ID              uint                 `json:"id"`
+	AffiliationID   uint                 `json:"affiliation_id"`
 	Affiliation     *AffiliationResponse `json:"affiliation,omitempty"`
-	CommunityUserID uint               `json:"community_user_id"`
-	CommunityUser   *UserResponse      `json:"community_user,omitempty"`
-	Name            string             `json:"name"`
-	Description     string             `json:"description"`
-	NumMax          uint               `json:"num_max"`
-	NumAttending    uint               `json:"num_attending"`
-	ProjectStartDay string             `json:"project_start_day"`
-	ProjectEndDay   string             `json:"project_end_day"`
-	FormStartDay    string             `json:"form_start_day"`
-	FormEndDay      string             `json:"form_end_day"`
-	CreatedAt       string             `json:"created_at"`
+	CommunityUserID uint                 `json:"community_user_id"`
+	CommunityUser   *UserResponse        `json:"community_user,omitempty"`
+	Name            string               `json:"name"`
+	Description     string               `json:"description"`
+	NumMax          uint                 `json:"num_max"`
+	NumAttending    uint                 `json:"num_attending"`
+	ProjectStartDay string               `json:"project_start_day"`
+	ProjectEndDay   string               `json:"project_end_day"`
+	FormStartDay    string               `json:"form_start_day"`
+	FormEndDay      string               `json:"form_end_day"`
+	CreatedAt       string               `json:"created_at"`
 }
 
 type StudentProjectResponse struct {
@@ -76,7 +76,6 @@ func ToUserResponse(u *User) UserResponse {
 	return resp
 }
 
-
 func ToProjectResponse(p *Project) ProjectResponse {
 	resp := ProjectResponse{
 		ID:              p.ID,
@@ -99,11 +98,11 @@ func ToProjectResponse(p *Project) ProjectResponse {
 	}
 	if p.CommunityUser.ID != 0 {
 		resp.CommunityUser = &UserResponse{
-			ID:            p.CommunityUser.ID,
-			Username:      p.CommunityUser.Username,
-			FullName:      p.CommunityUser.FullName,
-			Email:         p.CommunityUser.Email,
-			Role:          p.CommunityUser.Role,
+			ID:       p.CommunityUser.ID,
+			Username: p.CommunityUser.Username,
+			FullName: p.CommunityUser.FullName,
+			Email:    p.CommunityUser.Email,
+			Role:     p.CommunityUser.Role,
 		}
 	}
 	return resp

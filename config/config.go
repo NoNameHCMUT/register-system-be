@@ -1,10 +1,10 @@
 package config
 
 import (
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"time"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -22,7 +22,9 @@ type Config struct {
 }
 
 func Load() *Config {
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system env")
+	}
 	return &Config{
 		DBHost:           getEnv("DB_HOST", "localhost"),
 		DBPort:           getEnv("DB_PORT", "5432"),
