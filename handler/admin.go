@@ -17,6 +17,15 @@ func NewAdminHandler(biz business.AdminBusiness) *AdminHandler {
 	return &AdminHandler{biz: biz}
 }
 
+// @Summary      List pending users
+// @Description  Returns all users awaiting approval
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {array} model.UserResponse
+// @Failure      401 {object} map[string]string
+// @Failure      403 {object} map[string]string
+// @Router       /admin/users/pending [get]
 func (h *AdminHandler) ListPending(c *gin.Context) {
 	users, err := h.biz.ListPending()
 	if err != nil {
@@ -26,6 +35,17 @@ func (h *AdminHandler) ListPending(c *gin.Context) {
 	Success(c, users)
 }
 
+// @Summary      Accept a pending user
+// @Description  Activates a user account so they can login
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "User ID"
+// @Success      200 {object} model.UserResponse
+// @Failure      401 {object} map[string]string
+// @Failure      403 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /admin/users/{id}/accept [post]
 func (h *AdminHandler) AcceptUser(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -42,6 +62,17 @@ func (h *AdminHandler) AcceptUser(c *gin.Context) {
 	Success(c, user)
 }
 
+// @Summary      Reject a pending user
+// @Description  Keeps the user account inactive
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "User ID"
+// @Success      200 {object} map[string]string
+// @Failure      401 {object} map[string]string
+// @Failure      403 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /admin/users/{id}/reject [post]
 func (h *AdminHandler) RejectUser(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
