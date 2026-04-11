@@ -5,12 +5,13 @@ import (
 	"strings"
 
 	"register-system-be/model"
+	"register-system-be/repo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func Auth(secret string) gin.HandlerFunc {
+func Auth(secret string, userRepo repo.UserRepo) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		header := c.GetHeader("Authorization")
 		if header == "" {
@@ -42,6 +43,13 @@ func Auth(secret string) gin.HandlerFunc {
 		c.Set("user_id", claims.UserID)
 		c.Set("email", claims.Email)
 		c.Set("role", string(claims.Role))
+
+		user, err := userRepo.FindByID(claims.UserID)
+		if err != nil || !user.IsActive {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "account not active"})
+			return
+		}
+
 		c.Next()
 	}
 }

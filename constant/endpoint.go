@@ -12,5 +12,11 @@ const (
 	AdminAccept  = "/users/:id/accept"
 	AdminReject  = "/users/:id/reject"
 
+	AffiliationBase = "/affiliations"
+
+	ProjectBase   = "/projects"
+	ProjectMyList = "/my-list"
+
 	HealthCheck = "/health"
+	Swagger     = "/swagger/*any"
 )

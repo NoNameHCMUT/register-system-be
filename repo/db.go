@@ -24,5 +24,5 @@ func Connect(cfg *config.Config) *gorm.DB {
 }
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&model.User{}, &model.RefreshToken{})
+	db.AutoMigrate(&model.Affiliation{}, &model.User{}, &model.Project{}, &model.StudentProject{})
 }
