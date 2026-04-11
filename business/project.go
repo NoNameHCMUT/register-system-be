@@ -150,14 +150,14 @@ func (b *projectBusiness) Update(projectID uint, actorID uint, actorRole model.R
 	if err != nil {
 		return nil, errors.New("user not found")
 	}
-	actorRole = user.Role
+	currentRole := user.Role
 
 	p, err := b.projectRepo.FindByID(projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	if actorRole != model.RoleAdmin && actorID != p.CommunityUserID {
+	if currentRole != model.RoleAdmin && actorID != p.CommunityUserID {
 		return nil, errors.New("permission denied")
 	}
 

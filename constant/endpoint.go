@@ -16,7 +16,7 @@ const (
 
 	ProjectBase   = "/projects"
 	ProjectMyList = "/my-list"
-	ProjectByID = "/:id"
+	ProjectByID   = "/:id"
 
 	HealthCheck = "/health"
 	Swagger     = "/swagger/*any"
