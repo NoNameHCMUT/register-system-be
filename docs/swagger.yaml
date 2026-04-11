@@ -88,6 +88,27 @@ definitions:
       project_start_day:
         type: string
     type: object
+  model.ProjectUpdateRequest:
+    properties:
+      description:
+        type: string
+      form_end_day:
+        description: RFC3339
+        type: string
+      form_start_day:
+        description: RFC3339
+        type: string
+      name:
+        type: string
+      num_max:
+        type: integer
+      project_end_day:
+        description: RFC3339
+        type: string
+      project_start_day:
+        description: RFC3339
+        type: string
+    type: object
   model.RefreshRequest:
     properties:
       refresh_token:
@@ -457,6 +478,59 @@ paths:
       security:
       - BearerAuth: []
       summary: Create project
+      tags:
+      - Project
+  /projects/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Update a project (owner community/admin)
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update project
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.ProjectUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProjectResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update project
       tags:
       - Project
 securityDefinitions:

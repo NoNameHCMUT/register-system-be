@@ -10,6 +10,7 @@ import (
 
 type ProjectBusiness interface {
 	Create(creatorID uint, creatorRole model.Role, req *model.ProjectCreateRequest) (*model.ProjectResponse, error)
+	Update(projectID uint, actorID uint, actorRole model.Role, req *model.ProjectUpdateRequest) (*model.ProjectResponse, error)
 }
 
 type projectBusiness struct {
@@ -120,5 +121,85 @@ func (b *projectBusiness) Create(creatorID uint, creatorRole model.Role, req *mo
 	created.NumAttending = cnt
 
 	resp := toProjectResponse(created)
+	return &resp, nil
+}
+
+func (b *projectBusiness) Update(projectID uint, actorID uint, actorRole model.Role, req *model.ProjectUpdateRequest) (*model.ProjectResponse, error) {
+	user, err := b.userRepo.FindByID(actorID)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	actorRole = user.Role
+
+	p, err := b.projectRepo.FindByID(projectID)
+	if err != nil {
+		return nil, err
+	}
+
+	if actorRole != model.RoleAdmin && actorID != p.CommunityUserID {
+		return nil, errors.New("permission denied")
+	}
+
+	if req.Name != nil {
+		p.Name = *req.Name
+	}
+	if req.Description != nil {
+		p.Description = *req.Description
+	}
+	if req.NumMax != nil {
+		p.NumMax = *req.NumMax
+	}
+
+	if req.ProjectStartDay != nil {
+		t, err := parseRFC3339(*req.ProjectStartDay)
+		if err != nil {
+			return nil, err
+		}
+		p.ProjectStartDay = t
+	}
+	if req.ProjectEndDay != nil {
+		t, err := parseRFC3339(*req.ProjectEndDay)
+		if err != nil {
+			return nil, err
+		}
+		p.ProjectEndDay = t
+	}
+	if req.FormStartDay != nil {
+		t, err := parseRFC3339(*req.FormStartDay)
+		if err != nil {
+			return nil, err
+		}
+		p.FormStartDay = t
+	}
+	if req.FormEndDay != nil {
+		t, err := parseRFC3339(*req.FormEndDay)
+		if err != nil {
+			return nil, err
+		}
+		p.FormEndDay = t
+	}
+
+	if !p.ProjectStartDay.Before(p.ProjectEndDay) {
+		return nil, errors.New("project_start_day must be before project_end_day")
+	}
+	if !p.FormStartDay.Before(p.FormEndDay) {
+		return nil, errors.New("form_start_day must be before form_end_day")
+	}
+
+	if err := b.projectRepo.Update(p); err != nil {
+		return nil, err
+	}
+
+	updated, err := b.projectRepo.FindByID(projectID)
+	if err != nil {
+		return nil, err
+	}
+	cnt, err := b.projectRepo.CountAttending(updated.ID)
+	if err != nil {
+		return nil, err
+	}
+	updated.NumAttending = cnt
+
+	resp := toProjectResponse(updated)
 	return &resp, nil
 }

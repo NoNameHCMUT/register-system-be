@@ -57,6 +57,7 @@ func Setup(
 	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo))
 	{
 		projectsProtected.POST("", projectHandler.Create)
+		projectsProtected.PATCH(constant.ProjectByID, projectHandler.Update)
 	}
 
 	return r
