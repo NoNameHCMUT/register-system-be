@@ -90,10 +90,6 @@ func (b *authBusiness) Login(req *model.LoginRequest) (*model.AuthResponse, erro
 		return nil, errors.New("invalid credentials")
 	}
 
-	if !user.IsActive {
-		return nil, errors.New("account pending admin approval")
-	}
-
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
 		return nil, errors.New("invalid credentials")
 	}
@@ -126,10 +122,6 @@ func (b *authBusiness) Refresh(req *model.RefreshRequest) (*model.AuthResponse, 
 
 	if user.RefreshToken != req.RefreshToken {
 		return nil, errors.New("refresh token revoked")
-	}
-
-	if !user.IsActive {
-		return nil, errors.New("account not active")
 	}
 
 	return b.generateTokens(user)
