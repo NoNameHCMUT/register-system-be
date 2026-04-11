@@ -15,23 +15,23 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
-    build: .
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: register_system
-      JWT_SECRET: change-me-in-production
-      JWT_ACCESS_EXPIRY: 15m
-      JWT_REFRESH_EXPIRY: 168h
-      SERVER_PORT: 8080
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
+  # api:
+  #   build: .
+  #   environment:
+  #     DB_HOST: db
+  #     DB_PORT: 5432
+  #     DB_USER: postgres
+  #     DB_PASSWORD: postgres
+  #     DB_NAME: register_system
+  #     JWT_SECRET: change-me-in-production
+  #     JWT_ACCESS_EXPIRY: 15m
+  #     JWT_REFRESH_EXPIRY: 168h
+  #     SERVER_PORT: 8080
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
   seeder:
     image: node:20-alpine
@@ -47,8 +47,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      api:
-        condition: service_started
     command: ["sh", "-c", "npm i --silent && node seed.js"]
 
 volumes:
