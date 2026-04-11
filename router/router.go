@@ -17,6 +17,7 @@ func Setup(
 	authHandler *handler.AuthHandler,
 	adminHandler *handler.AdminHandler,
 	affiliationHandler *handler.AffiliationHandler,
+	projectHandler *handler.ProjectHandler,
 	cfg *config.Config,
 	userRepo repo.UserRepo,
 ) *gin.Engine {
@@ -51,6 +52,12 @@ func Setup(
 	}
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
+
+	projectsProtected := r.Group(constant.ProjectBase)
+	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo))
+	{
+		projectsProtected.POST("", projectHandler.Create)
+	}
 
 	return r
 }
