@@ -8,8 +8,18 @@ import (
 	"register-system-be/handler"
 	"register-system-be/repo"
 	"register-system-be/router"
+
+	_ "register-system-be/docs"
 )
 
+// @title           Register System API
+// @version         1.0
+// @description     Backend API for the register system with JWT auth and role-based access.
+// @host            localhost:8080
+// @BasePath        /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg := config.Load()
 	db := repo.Connect(cfg)
