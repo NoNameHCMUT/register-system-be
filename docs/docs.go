@@ -186,6 +186,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/affiliations": {
+            "get": {
+                "description": "Returns all valid affiliations for register form",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Affiliation"
+                ],
+                "summary": "Get all affiliations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.AffiliationResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Authenticates a user and returns JWT tokens. Only active accounts can login.",
