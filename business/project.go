@@ -24,8 +24,8 @@ func (b *projectBusiness) GetStudentProjects(userID uint, userRepo repo.UserRepo
 	if err != nil {
 		return nil, errors.New("user not found")
 	}
-	if user.Role != model.RoleStudent {
-		return nil, errors.New("only students can access this endpoint")
+	if user.Role != model.RoleStudent || user.Role != model.RoleSchool {
+		return nil, errors.New("you are not belong to me baby")
 	}
 	projects, err := b.projectRepo.GetByAffiliationID(user.AffiliationID)
 	if err != nil {
