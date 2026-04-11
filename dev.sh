@@ -1,28 +1,17 @@
 #!/bin/bash
 set -e
 
-RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-info()  { echo -e "${GREEN}[INFO]${NC}  $1"; }
-warn()  { echo -e "${YELLOW}[WARN]${NC}  $1"; }
-error() { echo -e "${RED}[ERROR]${NC} $1"; }
-
-check_cmd() {
-    if ! command -v "$1" &> /dev/null; then
-        error "$1 is not installed. Please install it first."
-        exit 1
-    fi
-}
+info() { echo -e "${GREEN}[INFO]${NC} $1"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 
 setup_env() {
     if [ ! -f .env ]; then
         info "Copying .env.example -> .env"
         cp .env.example .env
-    else
-        info ".env already exists, skipping"
     fi
 }
 
@@ -30,10 +19,9 @@ start_db() {
     if ! docker compose ps | grep -q "db.*running\|db.*healthy"; then
         info "Starting PostgreSQL..."
         docker compose up -d
-        info "Waiting for PostgreSQL to be ready..."
         sleep 3
     else
-        info "PostgreSQL is already running"
+        info "PostgreSQL already running"
     fi
 }
 
@@ -43,7 +31,6 @@ stop_db() {
 }
 
 run() {
-    check_cmd go
     setup_env
     start_db
     info "Running server..."
@@ -51,49 +38,64 @@ run() {
 }
 
 dev() {
-    check_cmd go
     if ! command -v air &> /dev/null; then
-        warn "air is not installed. Installing..."
+        warn "air not installed. Installing..."
         go install github.com/air-verse/air@latest
     fi
     setup_env
     start_db
     info "Starting dev server with hot reload..."
-    go tool air -v
+    air
 }
 
 build() {
-    check_cmd go
     info "Building binary..."
     go build -o bin/server ./cmd/server
     info "Binary saved to bin/server"
 }
 
-migrate() {
-    check_cmd go
+seed() {
     setup_env
     start_db
-    info "Running migrations via server startup..."
-    go run ./cmd/server
+    info "Running migrations..."
+    go run ./cmd/server &
+    SERVER_PID=$!
+    sleep 3
+    kill $SERVER_PID 2>/dev/null
+    wait $SERVER_PID 2>/dev/null
+    info "Seeding database..."
+    npm install --silent
+    node seed.js
+}
+
+swagger() {
+    info "Generating swagger docs..."
+    if ! command -v swag &> /dev/null; then
+        warn "swag not installed. Installing..."
+        go install github.com/swaggo/swag/cmd/swag@latest
+    fi
+    swag init -g cmd/server/main.go -o docs
+    info "Done"
 }
 
 case "${1:-}" in
     run)      run      ;;
     dev)      dev      ;;
     build)    build    ;;
-    seed)     ./seed.sh ;;
+    seed)     seed     ;;
+    swagger)  swagger  ;;
     db:start) setup_env; start_db ;;
     db:stop)  stop_db  ;;
     *)
-        echo "Usage: $0 {run|dev|build|seed|db:start|db:stop}"
+        echo "Usage: $0 {run|dev|build|seed|swagger|db:start|db:stop}"
         echo ""
-        echo "Commands:"
-        echo "  run        Start PostgreSQL + run the server"
-        echo "  dev        Start PostgreSQL + run with hot reload (air)"
-        echo "  build      Compile binary to bin/server"
-        echo "  seed       Seed database with test data"
-        echo "  db:start   Start PostgreSQL only"
-        echo "  db:stop    Stop PostgreSQL"
+        echo "  run       Start DB + run the server"
+        echo "  dev       Start DB + run with hot reload (air)"
+        echo "  build     Compile binary to bin/server"
+        echo "  seed      Migrate + seed database"
+        echo "  swagger   Regenerate swagger docs"
+        echo "  db:start  Start PostgreSQL only"
+        echo "  db:stop   Stop PostgreSQL"
         exit 1
         ;;
 esac
