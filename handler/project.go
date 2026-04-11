@@ -23,9 +23,7 @@ func NewProjectHandler(biz business.ProjectBusiness, userRepo repo.UserRepo) *Pr
 	}
 }
 
-
-//(GetMyProjects)
-
+// (GetMyProjects)
 // @Summary      Get projects for student
 // @Description  Get all projects available for current student's affiliation
 // @Tags         Project
@@ -41,22 +39,19 @@ func (h *ProjectHandler) GetMyProjects(c *gin.Context) {
 	userID := GetUserID(c)
 	projects, err := h.biz.GetStudentProjects(userID, h.userRepo)
 
-	if err != nil {
-		if err.Error() == "only students can access this endpoint" {
-			Error(c, http.StatusForbidden, err.Error())
-		} else if err.Error() == "user not found" {
-			Error(c, http.StatusNotFound, err.Error())
-		} else {
-			Error(c, http.StatusInternalServerError, err.Error())
-		}
-		return
+	switch {
+	case err.Error() == "only students can access this endpoint":
+		Error(c, http.StatusForbidden, err.Error())
+	case err.Error() == "user not found":
+		Error(c, http.StatusNotFound, err.Error())
+	default:
+		Error(c, http.StatusInternalServerError, err.Error())
 	}
 
 	Success(c, projects)
 }
 
 // (Create & Update)
-
 
 // @Summary      Create project
 // @Description  Create a project (community/admin)
