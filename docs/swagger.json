@@ -410,6 +410,7 @@
                 "email",
                 "full_name",
                 "password",
+                "role",
                 "username"
             ],
             "properties": {
@@ -426,6 +427,19 @@
                     "type": "string",
                     "minLength": 6
                 },
+                "role": {
+                    "enum": [
+                        "admin",
+                        "student",
+                        "school",
+                        "community"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Role"
+                        }
+                    ]
+                },
                 "student_id": {
                     "type": "string"
                 },
@@ -437,7 +451,13 @@
         "model.RegisterResponse": {
             "type": "object",
             "properties": {
+                "access_token": {
+                    "type": "string"
+                },
                 "message": {
+                    "type": "string"
+                },
+                "refresh_token": {
                     "type": "string"
                 },
                 "user": {
@@ -455,7 +475,7 @@
             ],
             "x-enum-varnames": [
                 "RoleAdmin",
-                "RoleUser",
+                "RoleStudent",
                 "RoleSchool",
                 "RoleCommunity"
             ]
@@ -475,6 +495,9 @@
                 "full_name": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "is_active": {
                     "type": "boolean"
                 },
@@ -483,9 +506,6 @@
                 },
                 "student_id": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 },
                 "username": {
                     "type": "string"
