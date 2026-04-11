@@ -8,19 +8,20 @@ import (
 	"register-system-be/model"
 
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler, cfg *config.Config) *gin.Engine {
+func Setup(
+	authHandler *handler.AuthHandler,
+	adminHandler *handler.AdminHandler,
+	affiliationHandler *handler.AffiliationHandler,
+	cfg *config.Config,
+) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
 
 	r.GET(constant.HealthCheck, func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
-
-	r.GET(constant.Swagger, ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := r.Group(constant.AuthBase)
 	{
@@ -42,6 +43,8 @@ func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler,
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
 		admin.POST(constant.AdminReject, adminHandler.RejectUser)
 	}
+
+	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
 
 	return r
 }

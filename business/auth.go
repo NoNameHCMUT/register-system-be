@@ -52,7 +52,7 @@ func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResp
 		Email:         req.Email,
 		StudentID:     req.StudentID,
 		AffiliationID: req.AffiliationID,
-		Role:          model.RoleUser,
+		Role:          model.RoleStudent,
 		IsActive:      false,
 	}
 

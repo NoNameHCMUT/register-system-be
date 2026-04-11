@@ -12,6 +12,8 @@ const (
 	AdminAccept  = "/users/:id/accept"
 	AdminReject  = "/users/:id/reject"
 
+	AffiliationBase = "/affiliations"
+
 	HealthCheck = "/health"
 	Swagger     = "/swagger/*any"
 )
