@@ -9,9 +9,17 @@ type Project struct {
 	CommunityUserID uint        `gorm:"not null;index" json:"community_user_id"`
 	CommunityUser   User        `gorm:"foreignKey:CommunityUserID" json:"community_user,omitempty"`
 	Name            string      `gorm:"not null" json:"name"`
-	StartDay        time.Time   `gorm:"not null" json:"start_day"`
-	EndDay          time.Time   `gorm:"not null" json:"end_day"`
-	CreatedAt       time.Time   `json:"created_at"`
+	Description     string      `gorm:"type:text" json:"description"`
+	NumMax          uint        `gorm:"not null;default:0" json:"num_max"`
+	ProjectStartDay time.Time   `gorm:"not null" json:"project_start_day"`
+	ProjectEndDay   time.Time   `gorm:"not null" json:"project_end_day"`
+	FormStartDay    time.Time   `gorm:"not null" json:"form_start_day"`
+	FormEndDay      time.Time   `gorm:"not null" json:"form_end_day"`
+
+	// NumAttending is derived from number of current registrations in student_projects.
+	// It is not stored in DB.
+	NumAttending uint      `gorm:"-" json:"num_attending"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type StudentProject struct {
