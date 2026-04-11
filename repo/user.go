@@ -61,9 +61,9 @@ func (r *userRepo) FindPending() ([]model.User, error) {
 }
 
 func (r *userRepo) UpdateActive(userID uint, active bool) error {
-	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("is_active", active).Error
+	return r.db.Model(&model.User{}).Where("user_id = ?", userID).Update("is_active", active).Error
 }
 
 func (r *userRepo) UpdateRefreshToken(userID uint, token string) error {
-	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("refresh_token", token).Error
+	return r.db.Model(&model.User{}).Where("user_id = ?", userID).Update("refresh_token", token).Error
 }
