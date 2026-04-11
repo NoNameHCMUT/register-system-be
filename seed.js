@@ -91,7 +91,7 @@ async function seedData() {
       const query = `
         INSERT INTO users (username, full_name, password_hash, role, is_active, student_id, email, affiliation_id) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING user_id
+        RETURNING id
       `;
       const values = [
         user.username, user.full_name, user.password_hash, user.role, 
@@ -99,10 +99,10 @@ async function seedData() {
       ];
 
       const inserted = await client.query(query, values);
-      const insertedId = inserted?.rows?.[0]?.user_id;
+      const insertedId = inserted?.rows?.[0]?.id;
 
       console.log(
-        `   - user_id=${insertedId} | username=${user.username} | role=${user.role} | full_name=${user.full_name} | student_id=${user.student_id} | email=${user.email} | affiliation=${affIdToName[user.affiliation_id] || user.affiliation_id}`
+        `   - id=${insertedId} | username=${user.username} | role=${user.role} | full_name=${user.full_name} | student_id=${user.student_id} | email=${user.email} | affiliation=${affIdToName[user.affiliation_id] || user.affiliation_id}`
       );
     }
 
