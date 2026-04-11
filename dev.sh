@@ -58,7 +58,7 @@ dev() {
     start_db
     setup
     info "Starting dev server with hot reload..."
-    air
+    $(go env GOPATH)/bin/air -c .air.toml
 }
 
 build() {
@@ -77,7 +77,7 @@ seed() {
     kill $SERVER_PID 2>/dev/null
     wait $SERVER_PID 2>/dev/null
     info "Seeding database..."
-    npm install --silent
+    npm install
     node seed.js
 }
 
