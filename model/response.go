@@ -12,7 +12,7 @@ type RegisterResponse struct {
 }
 
 type UserResponse struct {
-	UserID        uint                 `json:"user_id"`
+	ID            uint                 `json:"id"`
 	Username      string               `json:"username"`
 	FullName      string               `json:"full_name"`
 	Role          Role                 `json:"role"`
@@ -30,7 +30,7 @@ type AffiliationResponse struct {
 
 func ToUserResponse(u *User) UserResponse {
 	resp := UserResponse{
-		UserID:        u.ID,
+		ID:            u.ID,
 		Username:      u.Username,
 		FullName:      u.FullName,
 		Role:          u.Role,
