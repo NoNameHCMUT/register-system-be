@@ -3,6 +3,9 @@
 Go + Gin backend skeleton with JWT auth and role-based access.
 
 ## Quick Start
+docker compose up -d --build db api
+docker compose run --rm seeder
+go run ./cmd/server
 
 ```bash
 # 1. Start PostgreSQL
@@ -10,6 +13,15 @@ Go + Gin backend skeleton with JWT auth and role-based access.
 
 # 2. Run the server
 ./dev.sh run
+```
+
+### Seed sample data (Docker)
+
+The repo includes a Node-based seeder (`seed.js`) that can be run via Docker Compose.
+
+```bash
+docker compose up -d --build db api
+docker compose run --rm seeder
 ```
 
 Server starts at `http://localhost:8080`.
