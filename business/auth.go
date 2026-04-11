@@ -103,11 +103,20 @@ func (b *authBusiness) Login(req *model.LoginRequest) (*model.AuthResponse, erro
 
 func (b *authBusiness) Refresh(req *model.RefreshRequest) (*model.AuthResponse, error) {
 	claims := &model.Claims{}
-	token, err := jwt.ParseWithClaims(req.RefreshToken, claims, func(t *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(req.RefreshToken, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(b.cfg.JWTSecret), nil
 	})
-	if err != nil || !token.Valid {
+
+	if err != nil && !errors.Is(err, jwt.ErrTokenExpired) {
 		return nil, errors.New("invalid refresh token")
+	}
+
+	if claims.TokenType != model.RefreshToken {
+		return nil, errors.New("invalid token type")
+	}
+
+	if claims.ExpiresAt != nil && time.Now().After(claims.ExpiresAt.Time) {
+		return nil, errors.New("refresh token expired")
 	}
 
 	user, err := b.userRepo.FindByID(claims.UserID)
@@ -117,6 +126,10 @@ func (b *authBusiness) Refresh(req *model.RefreshRequest) (*model.AuthResponse, 
 
 	if user.RefreshToken != req.RefreshToken {
 		return nil, errors.New("refresh token revoked")
+	}
+
+	if !user.IsActive {
+		return nil, errors.New("account not active")
 	}
 
 	return b.generateTokens(user)
