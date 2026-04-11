@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Setup(authHandler *handler.AuthHandler, cfg *config.Config) *gin.Engine {
+func Setup(authHandler *handler.AuthHandler, adminHandler *handler.AdminHandler, cfg *config.Config) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
 
@@ -31,11 +31,12 @@ func Setup(authHandler *handler.AuthHandler, cfg *config.Config) *gin.Engine {
 		authProtected.GET(constant.AuthMe, authHandler.Me)
 	}
 
-	admin := r.Group("/")
+	admin := r.Group(constant.AdminBase)
 	admin.Use(middleware.Auth(cfg.JWTSecret), middleware.RequireRole(string(model.RoleAdmin)))
 	{
-		// Add admin-only endpoints here
-		_ = admin
+		admin.GET(constant.AdminPending, adminHandler.ListPending)
+		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
+		admin.POST(constant.AdminReject, adminHandler.RejectUser)
 	}
 
 	return r

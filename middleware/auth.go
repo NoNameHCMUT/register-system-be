@@ -34,6 +34,11 @@ func Auth(secret string) gin.HandlerFunc {
 			return
 		}
 
+		if claims.TokenType != model.AccessToken {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token type"})
+			return
+		}
+
 		c.Set("user_id", claims.UserID)
 		c.Set("email", claims.Email)
 		c.Set("role", string(claims.Role))
