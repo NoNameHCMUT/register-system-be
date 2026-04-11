@@ -1,0 +1,13 @@
+{
+  "name": "register-system-be-seed",
+  "private": true,
+  "description": "Seeder for register-system-be (runs seed.js)",
+  "type": "commonjs",
+  "scripts": {
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pg": "^8.12.0"
+  }
+}
