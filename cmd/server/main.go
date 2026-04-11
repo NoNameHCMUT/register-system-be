@@ -32,7 +32,7 @@ func main() {
 	authBiz := business.NewAuthBusiness(userRepo, affiliationRepo, cfg)
 	adminBiz := business.NewAdminBusiness(userRepo)
 	affiliationBiz := business.NewAffiliationBusiness(affiliationRepo)
-	projectBiz := business.NewProjectBusiness(projectRepo)
+	projectBiz := business.NewProjectBusiness(projectRepo, affiliationRepo, userRepo)
 
 	authHandler := handler.NewAuthHandler(authBiz)
 	adminHandler := handler.NewAdminHandler(adminBiz)

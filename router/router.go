@@ -52,12 +52,16 @@ func Setup(
 	}
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
-
 	project := r.Group(constant.ProjectBase)
-	project.Use(middleware.Auth(cfg.JWTSecret, userRepo))
-	{
-		project.GET(constant.ProjectMyList, projectHandler.GetMyProjects)
-	}
+    project.Use(middleware.Auth(cfg.JWTSecret, userRepo))
+    {
+        // Route của bạn
+        project.GET(constant.ProjectMyList, projectHandler.GetMyProjects)
+        
+        // Routes của đồng đội
+        project.POST("", projectHandler.Create)
+        project.PATCH(constant.ProjectByID, projectHandler.Update)
+    }
 
 	return r
 }
