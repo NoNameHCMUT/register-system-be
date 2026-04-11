@@ -9,6 +9,7 @@ import (
 type ProjectRepo interface {
 	Create(p *model.Project) error
 	FindByID(id uint) (*model.Project, error)
+	Update(p *model.Project) error
 	CountAttending(projectID uint) (uint, error)
 }
 
@@ -30,6 +31,10 @@ func (r *projectRepo) FindByID(id uint) (*model.Project, error) {
 		return nil, err
 	}
 	return &p, nil
+}
+
+func (r *projectRepo) Update(p *model.Project) error {
+	return r.db.Save(p).Error
 }
 
 func (r *projectRepo) CountAttending(projectID uint) (uint, error) {
