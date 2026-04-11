@@ -16,6 +16,7 @@ func Setup(
 	adminHandler *handler.AdminHandler,
 	affiliationHandler *handler.AffiliationHandler,
 	cfg *config.Config,
+	userRepo repo.UserRepo,
 ) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
