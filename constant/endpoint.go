@@ -7,5 +7,10 @@ const (
 	AuthRefresh  = "/refresh"
 	AuthMe       = "/me"
 
+	AdminBase    = "/admin"
+	AdminPending = "/users/pending"
+	AdminAccept  = "/users/:id/accept"
+	AdminReject  = "/users/:id/reject"
+
 	HealthCheck = "/health"
 )
