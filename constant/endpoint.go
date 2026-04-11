@@ -14,7 +14,8 @@ const (
 
 	AffiliationBase = "/affiliations"
 
-	ProjectBase = "/projects"
+	ProjectBase   = "/projects"
+	ProjectMyList = "/my-list"
 	ProjectByID = "/:id"
 
 	HealthCheck = "/health"

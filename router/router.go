@@ -52,13 +52,13 @@ func Setup(
 	}
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
-
-	projectsProtected := r.Group(constant.ProjectBase)
-	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
-	{
-		projectsProtected.POST("", projectHandler.Create)
-		projectsProtected.PATCH(constant.ProjectByID, projectHandler.Update)
-	}
-
+	
+	project := r.Group(constant.ProjectBase)
+    project.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
+    {
+        project.GET(constant.ProjectMyList, projectHandler.GetMyProjects)
+        project.POST("", projectHandler.Create)
+        project.PATCH(constant.ProjectByID, projectHandler.Update)
+    }
 	return r
 }

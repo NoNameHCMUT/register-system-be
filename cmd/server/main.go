@@ -37,7 +37,7 @@ func main() {
 	authHandler := handler.NewAuthHandler(authBiz)
 	adminHandler := handler.NewAdminHandler(adminBiz)
 	affiliationHandler := handler.NewAffiliationHandler(affiliationBiz)
-	projectHandler := handler.NewProjectHandler(projectBiz)
+	projectHandler := handler.NewProjectHandler(projectBiz, userRepo)
 
 	r := router.Setup(authHandler, adminHandler, affiliationHandler, projectHandler, cfg, userRepo)
 	log.Printf("Server starting on :%s", cfg.ServerPort)
