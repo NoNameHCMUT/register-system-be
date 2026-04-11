@@ -1,0 +1,3 @@
+# If already present in repo, keep appending; this is a minimal default
+node_modules/
+.env
