@@ -387,6 +387,212 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/projects": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a project (community/admin)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Create project",
+                "parameters": [
+                    {
+                        "description": "Create project",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/my-list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all projects available for current student's affiliation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get projects for student",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.ProjectResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Only students can access",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a project (owner community/admin)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Update project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update project",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -426,6 +632,125 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProjectCreateRequest": {
+            "type": "object",
+            "required": [
+                "affiliation_id",
+                "form_end_day",
+                "form_start_day",
+                "name",
+                "num_max",
+                "project_end_day",
+                "project_start_day"
+            ],
+            "properties": {
+                "affiliation_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "form_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "num_max": {
+                    "type": "integer"
+                },
+                "project_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProjectResponse": {
+            "type": "object",
+            "properties": {
+                "affiliation": {
+                    "$ref": "#/definitions/model.AffiliationResponse"
+                },
+                "affiliation_id": {
+                    "type": "integer"
+                },
+                "community_user": {
+                    "$ref": "#/definitions/model.UserResponse"
+                },
+                "community_user_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "form_end_day": {
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "num_attending": {
+                    "type": "integer"
+                },
+                "num_max": {
+                    "type": "integer"
+                },
+                "project_end_day": {
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProjectUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "form_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "num_max": {
+                    "type": "integer"
+                },
+                "project_end_day": {
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "description": "RFC3339",
                     "type": "string"
                 }
             }

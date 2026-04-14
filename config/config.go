@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -13,6 +14,8 @@ type Config struct {
 	DBUser           string
 	DBPassword       string
 	DBName           string
+	DBSSLMode        string
+	DBChannelBinding string
 	JWTSecret        string
 	JWTAccessExpiry  time.Duration
 	JWTRefreshExpiry time.Duration
@@ -20,13 +23,17 @@ type Config struct {
 }
 
 func Load() *Config {
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system env")
+	}
 	return &Config{
 		DBHost:           getEnv("DB_HOST", "localhost"),
 		DBPort:           getEnv("DB_PORT", "5432"),
 		DBUser:           getEnv("DB_USER", "postgres"),
 		DBPassword:       getEnv("DB_PASSWORD", "postgres"),
 		DBName:           getEnv("DB_NAME", "register_system"),
+		DBSSLMode:        getEnv("DB_SSLMODE", "disable"),
+		DBChannelBinding: getEnv("DB_CHANNEL_BINDING", "disable"),
 		JWTSecret:        getEnv("JWT_SECRET", "secret"),
 		JWTAccessExpiry:  mustParseDuration(getEnv("JWT_ACCESS_EXPIRY", "15m")),
 		JWTRefreshExpiry: mustParseDuration(getEnv("JWT_REFRESH_EXPIRY", "168h")),

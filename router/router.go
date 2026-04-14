@@ -17,6 +17,7 @@ func Setup(
 	authHandler *handler.AuthHandler,
 	adminHandler *handler.AdminHandler,
 	affiliationHandler *handler.AffiliationHandler,
+	projectHandler *handler.ProjectHandler,
 	cfg *config.Config,
 	userRepo repo.UserRepo,
 ) *gin.Engine {
@@ -43,7 +44,7 @@ func Setup(
 	}
 
 	admin := r.Group(constant.AdminBase)
-	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.RequireRole(string(model.RoleAdmin)))
+	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly(), middleware.RequireRole(string(model.RoleAdmin)))
 	{
 		admin.GET(constant.AdminPending, adminHandler.ListPending)
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
@@ -52,5 +53,12 @@ func Setup(
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)
 
+	project := r.Group(constant.ProjectBase)
+	project.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
+	{
+		project.GET(constant.ProjectMyList, projectHandler.GetMyProjects)
+		project.POST("", projectHandler.Create)
+		project.PATCH(constant.ProjectByID, projectHandler.Update)
+	}
 	return r
 }
