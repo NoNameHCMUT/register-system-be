@@ -14,6 +14,9 @@ type UserRepo interface {
 	FindPending() ([]model.User, error)
 	UpdateActive(userID uint, active bool) error
 	UpdateRefreshToken(userID uint, token string) error
+	UpdateProfile(userID uint, phone string, avatarURL string) error
+	UpdateFields(userID uint, fields map[string]interface{}) error
+	FindAll() ([]model.User, error)
 }
 
 type userRepo struct {
@@ -66,4 +69,30 @@ func (r *userRepo) UpdateActive(userID uint, active bool) error {
 
 func (r *userRepo) UpdateRefreshToken(userID uint, token string) error {
 	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("refresh_token", token).Error
+}
+
+func (r *userRepo) UpdateProfile(userID uint, phone string, avatarURL string) error {
+	updates := map[string]interface{}{}
+	if phone != "" {
+		updates["phone"] = phone
+	}
+	if avatarURL != "" {
+		updates["avatar_url"] = avatarURL
+	}
+	if len(updates) == 0 {
+		return nil
+	}
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Updates(updates).Error
+}
+
+func (r *userRepo) UpdateFields(userID uint, fields map[string]interface{}) error {
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Updates(fields).Error
+}
+
+func (r *userRepo) FindAll() ([]model.User, error) {
+	var users []model.User
+	if err := r.db.Preload("Affiliation").Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }

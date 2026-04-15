@@ -17,12 +17,16 @@ async function seed() {
   await client.query('TRUNCATE TABLE users, affiliations RESTART IDENTITY CASCADE;');
 
   const affResult = await client.query(`
-    INSERT INTO affiliations (std_name) VALUES
-    ('Ban Chi dao Chien dich Mua He Xanh'),
-    ('Dai hoc Bach Khoa TP.HCM'),
-    ('Dai hoc Kinh te - Luat')
+    INSERT INTO affiliations (std_name, description) VALUES
+    ($1, $2),
+    ($3, $4),
+    ($5, $6)
     RETURNING id, std_name;
-  `);
+  `, [
+    'Ban Chi dao Chien dich Mua He Xanh', 'Central指挥Committee',
+    'Dai hoc Bach Khoa TP.HCM', 'University',
+    'Dai hoc Kinh te - Luat', 'University'
+  ]);
 
   const affMap = {};
   affResult.rows.forEach(r => { affMap[r.std_name] = r.id; });

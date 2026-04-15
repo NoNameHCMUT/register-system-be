@@ -4,3 +4,6 @@ node_modules/
 
 # local artifacts
 server
+
+# uploads
+uploads/

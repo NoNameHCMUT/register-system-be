@@ -5,6 +5,7 @@ import (
 
 	"register-system-be/business"
 	"register-system-be/config"
+	"register-system-be/email"
 	"register-system-be/handler"
 	"register-system-be/repo"
 	"register-system-be/router"
@@ -28,18 +29,28 @@ func main() {
 	userRepo := repo.NewUserRepo(db)
 	affiliationRepo := repo.NewAffiliationRepo(db)
 	projectRepo := repo.NewProjectRepo(db)
+	applicationRepo := repo.NewApplicationRepo(db)
 
-	authBiz := business.NewAuthBusiness(userRepo, affiliationRepo, cfg)
-	adminBiz := business.NewAdminBusiness(userRepo)
+	var emailSender email.EmailSender
+	if cfg.SMTPUser != "" {
+		emailSender = email.NewSMTPSender(cfg.SMTPHost, cfg.SMTPPort, cfg.SMTPUser, cfg.SMTPPassword, cfg.SMTPFrom)
+	} else {
+		emailSender = email.NewNoopSender()
+	}
+
+	authBiz := business.NewAuthBusiness(userRepo, affiliationRepo, cfg, emailSender)
+	adminBiz := business.NewAdminBusiness(userRepo, projectRepo, applicationRepo, affiliationRepo, emailSender)
 	affiliationBiz := business.NewAffiliationBusiness(affiliationRepo)
 	projectBiz := business.NewProjectBusiness(projectRepo, affiliationRepo, userRepo)
+	applicationBiz := business.NewApplicationBusiness(applicationRepo, projectRepo, userRepo, emailSender)
 
-	authHandler := handler.NewAuthHandler(authBiz)
+	authHandler := handler.NewAuthHandler(authBiz, cfg.UploadDir)
 	adminHandler := handler.NewAdminHandler(adminBiz)
 	affiliationHandler := handler.NewAffiliationHandler(affiliationBiz)
-	projectHandler := handler.NewProjectHandler(projectBiz)
+	projectHandler := handler.NewProjectHandler(projectBiz, cfg.UploadDir)
+	applicationHandler := handler.NewApplicationHandler(applicationBiz)
 
-	r := router.Setup(authHandler, adminHandler, affiliationHandler, projectHandler, cfg, userRepo)
+	r := router.Setup(authHandler, adminHandler, affiliationHandler, projectHandler, applicationHandler, cfg, userRepo)
 	log.Printf("Server starting on :%s", cfg.ServerPort)
 	if err := r.Run(":" + cfg.ServerPort); err != nil {
 		log.Fatal(err)

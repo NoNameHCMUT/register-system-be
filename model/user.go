@@ -28,6 +28,8 @@ type User struct {
 	AffiliationID uint        `gorm:"not null" json:"affiliation_id"`
 	Affiliation   Affiliation `gorm:"foreignKey:AffiliationID" json:"affiliation,omitempty"`
 	RefreshToken  string      `json:"-"`
+	AvatarURL     string      `json:"avatar_url,omitempty"`
+	Phone         string      `json:"phone,omitempty"`
 }
 
 type TokenType string
