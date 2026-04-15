@@ -55,7 +55,7 @@ func (b *adminBusiness) AcceptUser(userID uint) (*model.UserResponse, error) {
 		return nil, err
 	}
 	user.IsActive = true
-	go email.NotifyAccountStatus(b.emailSender, user.Email, true)
+	go func() { _ = email.NotifyAccountStatus(b.emailSender, user.Email, true) }()
 	resp := model.ToUserResponse(user)
 	return &resp, nil
 }
@@ -68,7 +68,7 @@ func (b *adminBusiness) RejectUser(userID uint) error {
 	if err := b.userRepo.UpdateActive(userID, false); err != nil {
 		return err
 	}
-	go email.NotifyAccountStatus(b.emailSender, user.Email, false)
+	go func() { _ = email.NotifyAccountStatus(b.emailSender, user.Email, false) }()
 	return nil
 }
 

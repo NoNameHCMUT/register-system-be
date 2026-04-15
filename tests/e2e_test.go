@@ -57,7 +57,7 @@ func TestMain(m *testing.M) {
 		os.Exit(0)
 	}
 
-	db.Migrator().DropTable(&model.StudentProject{}, &model.Project{}, &model.User{}, &model.Affiliation{})
+	db.Migrator().DropTable(&model.StudentProject{}, &model.Project{}, &model.User{}, &model.Affiliation{}) //nolint:errcheck
 	repo.Migrate(db)
 
 	userRepo := repo.NewUserRepo(db)
@@ -115,7 +115,7 @@ func doMultipartRequest(t *testing.T, method, path, fieldName, filename string, 
 	var buf bytes.Buffer
 	w := multipart.NewWriter(&buf)
 	part, _ := w.CreateFormFile(fieldName, filename)
-	part.Write(fileContent)
+	_, _ = part.Write(fileContent)
 	w.Close()
 	req, _ := http.NewRequest(method, "http://localhost"+path, &buf)
 	req.Header.Set("Content-Type", w.FormDataContentType())
@@ -130,7 +130,7 @@ func doMultipartRequest(t *testing.T, method, path, fieldName, filename string, 
 func parseResponse(t *testing.T, w *httptest.ResponseRecorder) map[string]interface{} {
 	t.Helper()
 	var result map[string]interface{}
-	json.Unmarshal(w.Body.Bytes(), &result)
+	_ = json.Unmarshal(w.Body.Bytes(), &result)
 	return result
 }
 
