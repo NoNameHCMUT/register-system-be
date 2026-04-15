@@ -3,6 +3,7 @@ package business
 import (
 	"errors"
 	"testing"
+	"time"
 
 	"register-system-be/model"
 )
@@ -222,8 +223,8 @@ func (m *mockProjectRepo) UpdateDateApproved(id uint, dateApproved interface{}) 
 	if !ok {
 		return errors.New("not found")
 	}
-	if t, ok := dateApproved.(interface{ IsZero() bool }); ok && !t.IsZero() {
-		p.DateApproved = nil
+	if t, ok := dateApproved.(time.Time); ok && !t.IsZero() {
+		p.DateApproved = &t
 	} else {
 		p.DateApproved = nil
 	}
@@ -375,7 +376,7 @@ func TestLoginBlockedForInactiveUser(t *testing.T) {
 		Username: "inactive", FullName: "Test", PasswordHash: "$2a$10$invalid",
 		Email: "inactive@test.com", Role: model.RoleStudent, IsActive: false, AffiliationID: 1,
 	}
-	userRepo.Create(user)
+	_ = userRepo.Create(user)
 
 	if user.IsActive {
 		t.Error("user should be inactive")

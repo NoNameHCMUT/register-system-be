@@ -215,7 +215,9 @@ func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.Applica
 
 		appUser, err := b.userRepo.FindByID(app.UserID)
 		if err == nil {
-			go email.NotifyApplicationStatus(b.emailSender, appUser.Email, string(targetStatus), project.Name)
+			go func() {
+				_ = email.NotifyApplicationStatus(b.emailSender, appUser.Email, string(targetStatus), project.Name)
+			}()
 		}
 	}
 
@@ -258,7 +260,9 @@ func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.A
 
 		appUser, err := b.userRepo.FindByID(app.UserID)
 		if err == nil {
-			go email.NotifyApplicationStatus(b.emailSender, appUser.Email, string(targetStatus), project.Name)
+			go func() {
+				_ = email.NotifyApplicationStatus(b.emailSender, appUser.Email, string(targetStatus), project.Name)
+			}()
 		}
 	}
 
