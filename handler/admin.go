@@ -18,6 +18,14 @@ func NewAdminHandler(biz business.AdminBusiness) *AdminHandler {
 	return &AdminHandler{biz: biz}
 }
 
+// @Summary      List pending users
+// @Description  Get all users awaiting approval
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {array} model.UserResponse
+// @Failure      500 {object} map[string]string
+// @Router       /admin/users/pending [get]
 func (h *AdminHandler) ListPending(c *gin.Context) {
 	users, err := h.biz.ListPending()
 	if err != nil {
@@ -27,6 +35,15 @@ func (h *AdminHandler) ListPending(c *gin.Context) {
 	Success(c, users)
 }
 
+// @Summary      Accept user
+// @Description  Approve a pending user account
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "User ID"
+// @Success      200 {object} model.UserResponse
+// @Failure      404 {object} map[string]string
+// @Router       /admin/users/{id}/accept [post]
 func (h *AdminHandler) AcceptUser(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -43,6 +60,15 @@ func (h *AdminHandler) AcceptUser(c *gin.Context) {
 	Success(c, user)
 }
 
+// @Summary      Reject user
+// @Description  Reject a pending user account
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "User ID"
+// @Success      200 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /admin/users/{id}/reject [post]
 func (h *AdminHandler) RejectUser(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -58,6 +84,14 @@ func (h *AdminHandler) RejectUser(c *gin.Context) {
 	Success(c, gin.H{"message": "user rejected"})
 }
 
+// @Summary      List all projects
+// @Description  Admin master view of all projects
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {array} model.ProjectResponse
+// @Failure      500 {object} map[string]string
+// @Router       /admin/projects [get]
 func (h *AdminHandler) ListAllProjects(c *gin.Context) {
 	projects, err := h.biz.ListAllProjects()
 	if err != nil {
@@ -67,6 +101,14 @@ func (h *AdminHandler) ListAllProjects(c *gin.Context) {
 	Success(c, projects)
 }
 
+// @Summary      List all applications
+// @Description  Admin view of all student applications
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {array} model.StudentProjectResponse
+// @Failure      500 {object} map[string]string
+// @Router       /admin/applications [get]
 func (h *AdminHandler) ListAllApplications(c *gin.Context) {
 	apps, err := h.biz.ListAllApplications()
 	if err != nil {
@@ -76,6 +118,16 @@ func (h *AdminHandler) ListAllApplications(c *gin.Context) {
 	Success(c, apps)
 }
 
+// @Summary      Create affiliation
+// @Description  Add a new affiliation
+// @Tags         Admin
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body body model.AffiliationCreateRequest true "Affiliation data"
+// @Success      201 {object} model.AffiliationResponse
+// @Failure      400 {object} map[string]string
+// @Router       /admin/affiliations [post]
 func (h *AdminHandler) CreateAffiliation(c *gin.Context) {
 	req, ok := Parse[model.AffiliationCreateRequest](c)
 	if !ok {
@@ -91,6 +143,17 @@ func (h *AdminHandler) CreateAffiliation(c *gin.Context) {
 	Created(c, res)
 }
 
+// @Summary      Update affiliation
+// @Description  Update an existing affiliation
+// @Tags         Admin
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "Affiliation ID"
+// @Param        body body model.AffiliationUpdateRequest true "Update fields"
+// @Success      200 {object} model.AffiliationResponse
+// @Failure      400 {object} map[string]string
+// @Router       /admin/affiliations/{id} [patch]
 func (h *AdminHandler) UpdateAffiliation(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -112,6 +175,15 @@ func (h *AdminHandler) UpdateAffiliation(c *gin.Context) {
 	Success(c, res)
 }
 
+// @Summary      Delete affiliation
+// @Description  Remove an affiliation by ID
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "Affiliation ID"
+// @Success      200 {object} map[string]string
+// @Failure      400 {object} map[string]string
+// @Router       /admin/affiliations/{id} [delete]
 func (h *AdminHandler) DeleteAffiliation(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
