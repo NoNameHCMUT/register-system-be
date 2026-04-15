@@ -1,9 +1,7 @@
-
 .env
 node_modules/
-
-# local artifacts
 server
-
-# uploads
 uploads/
+IMPLEMENTATION_PLAN.md
+AGENTS.md
+NEW_UPDATE.md
