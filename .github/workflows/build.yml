@@ -7,8 +7,21 @@ on:
     branches: [main, develop]
 
 jobs:
+  check-source-branch:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure PR targets main only from develop
+        run: |
+          if [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "::error::PRs to main must come from develop. Current source: ${{ github.head_ref }}"
+            exit 1
+          fi
+
   build-and-test:
     runs-on: ubuntu-latest
+    needs: check-source-branch
+    if: always() && (needs.check-source-branch.result == 'success' || needs.check-source-branch.result == 'skipped')
 
     services:
       postgres:

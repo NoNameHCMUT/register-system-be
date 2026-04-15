@@ -92,12 +92,12 @@ func Setup(
 		student.GET(constant.StudentApplications, applicationHandler.ListByStudent)
 	}
 
-	projectsProtected := r.Group(constant.ProjectBase)
-	projectsProtected.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
+	project := r.Group(constant.ProjectBase)
+	project.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly())
 	{
-		projectsProtected.POST("", projectHandler.Create)
-		projectsProtected.PATCH(constant.ProjectByID, projectHandler.Update)
-		projectsProtected.POST(constant.ProjectBanner, projectHandler.UploadBanner)
+		project.POST("", projectHandler.Create)
+		project.PATCH(constant.ProjectByID, projectHandler.Update)
+		project.POST(constant.ProjectBanner, projectHandler.UploadBanner)
 	}
 
 	r.GET(constant.AffiliationBase, affiliationHandler.ListAll)

@@ -13,6 +13,7 @@ type ProjectRepo interface {
 	FindByAffiliation(affiliationID uint) ([]model.Project, error)
 	FindByAffiliationApproved(affiliationID uint) ([]model.Project, error)
 	FindByCreator(userID uint) ([]model.Project, error)
+	GetByAffiliationID(affiliationID uint) ([]model.Project, error)
 	Update(p *model.Project) error
 	UpdateDateApproved(id uint, dateApproved interface{}) error
 	UpdateBanner(id uint, bannerURL string) error
@@ -75,6 +76,10 @@ func (r *projectRepo) FindByCreator(userID uint) ([]model.Project, error) {
 		return nil, err
 	}
 	return projects, nil
+}
+
+func (r *projectRepo) GetByAffiliationID(affiliationID uint) ([]model.Project, error) {
+	return r.FindByAffiliation(affiliationID)
 }
 
 func (r *projectRepo) Update(p *model.Project) error {

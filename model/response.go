@@ -84,3 +84,38 @@ func ToUserResponse(u *User) UserResponse {
 	}
 	return resp
 }
+
+func ToProjectResponse(p *Project) ProjectResponse {
+	resp := ProjectResponse{
+		ID:              p.ID,
+		AffiliationID:   p.AffiliationID,
+		CommunityUserID: p.CommunityUserID,
+		Name:            p.Name,
+		Description:     p.Description,
+		NumMax:          p.NumMax,
+		NumAttending:    p.NumAttending,
+		ProjectStartDay: p.ProjectStartDay.Format("2006-01-02T15:04:05Z07:00"),
+		ProjectEndDay:   p.ProjectEndDay.Format("2006-01-02T15:04:05Z07:00"),
+		FormStartDay:    p.FormStartDay.Format("2006-01-02T15:04:05Z07:00"),
+		FormEndDay:      p.FormEndDay.Format("2006-01-02T15:04:05Z07:00"),
+		BannerURL:       p.BannerURL,
+		CreatedAt:       p.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}
+
+	if p.DateApproved != nil {
+		resp.DateApproved = p.DateApproved.Format("2006-01-02T15:04:05Z07:00")
+	}
+
+	if p.Affiliation.ID != 0 {
+		resp.Affiliation = &AffiliationResponse{
+			ID:          p.Affiliation.ID,
+			StdName:     p.Affiliation.StdName,
+			Description: p.Affiliation.Description,
+		}
+	}
+	if p.CommunityUser.ID != 0 {
+		u := ToUserResponse(&p.CommunityUser)
+		resp.CommunityUser = &u
+	}
+	return resp
+}
