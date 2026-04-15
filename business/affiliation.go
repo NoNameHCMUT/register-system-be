@@ -29,8 +29,9 @@ func (b *affiliationBusiness) ListAll() ([]model.AffiliationResponse, error) {
 			continue
 		}
 		res = append(res, model.AffiliationResponse{
-			ID:      aff.ID,
-			StdName: aff.StdName,
+			ID:          aff.ID,
+			StdName:     aff.StdName,
+			Description: aff.Description,
 		})
 	}
 
