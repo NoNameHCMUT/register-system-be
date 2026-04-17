@@ -24,5 +24,7 @@ func Connect(cfg *config.Config) *gorm.DB {
 }
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&model.Affiliation{}, &model.User{}, &model.Project{}, &model.StudentProject{})
+	if err := db.AutoMigrate(&model.Affiliation{}, &model.User{}, &model.Project{}, &model.StudentProject{}); err != nil {
+		log.Fatalf("Database migration failed: %v", err)
+	}
 }

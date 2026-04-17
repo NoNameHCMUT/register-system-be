@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -13,24 +14,44 @@ type Config struct {
 	DBUser           string
 	DBPassword       string
 	DBName           string
+	DBSSLMode        string
+	DBChannelBinding string
 	JWTSecret        string
 	JWTAccessExpiry  time.Duration
 	JWTRefreshExpiry time.Duration
 	ServerPort       string
+	UploadDir        string
+	MaxUploadSize    int64
+	SMTPHost         string
+	SMTPPort         string
+	SMTPUser         string
+	SMTPPassword     string
+	SMTPFrom         string
 }
 
 func Load() *Config {
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system env")
+	}
 	return &Config{
 		DBHost:           getEnv("DB_HOST", "localhost"),
 		DBPort:           getEnv("DB_PORT", "5432"),
 		DBUser:           getEnv("DB_USER", "postgres"),
 		DBPassword:       getEnv("DB_PASSWORD", "postgres"),
 		DBName:           getEnv("DB_NAME", "register_system"),
+		DBSSLMode:        getEnv("DB_SSLMODE", "disable"),
+		DBChannelBinding: getEnv("DB_CHANNEL_BINDING", "disable"),
 		JWTSecret:        getEnv("JWT_SECRET", "secret"),
 		JWTAccessExpiry:  mustParseDuration(getEnv("JWT_ACCESS_EXPIRY", "15m")),
 		JWTRefreshExpiry: mustParseDuration(getEnv("JWT_REFRESH_EXPIRY", "168h")),
 		ServerPort:       getEnv("SERVER_PORT", "8080"),
+		UploadDir:        getEnv("UPLOAD_DIR", "uploads"),
+		MaxUploadSize:    mustParseInt64(getEnv("MAX_UPLOAD_SIZE", "5242880")),
+		SMTPHost:         getEnv("SMTP_HOST", "smtp.gmail.com"),
+		SMTPPort:         getEnv("SMTP_PORT", "587"),
+		SMTPUser:         getEnv("SMTP_USER", ""),
+		SMTPPassword:     getEnv("SMTP_PASSWORD", ""),
+		SMTPFrom:         getEnv("SMTP_FROM", ""),
 	}
 }
 
@@ -47,4 +68,15 @@ func mustParseDuration(s string) time.Duration {
 		panic("invalid duration: " + s)
 	}
 	return d
+}
+
+func mustParseInt64(s string) int64 {
+	var v int64
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			panic("invalid integer: " + s)
+		}
+		v = v*10 + int64(c-'0')
+	}
+	return v
 }
