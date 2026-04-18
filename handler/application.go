@@ -141,7 +141,7 @@ func (h *ApplicationHandler) SchoolAction(c *gin.Context) {
 // @Success      200 {array} model.StudentProjectResponse
 // @Failure      400 {object} map[string]string
 // @Failure      403 {object} map[string]string
-// @Router       /community/projects/{id}/applicants [get]
+// @Router       /communities/projects/{id}/applicants [get]
 func (h *ApplicationHandler) ListByProjectForCommunity(c *gin.Context) {
 	projectID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -171,7 +171,7 @@ func (h *ApplicationHandler) ListByProjectForCommunity(c *gin.Context) {
 // @Success      200 {object} map[string]string
 // @Failure      400 {object} map[string]string
 // @Failure      403 {object} map[string]string
-// @Router       /community/applicants/action [post]
+// @Router       /communities/applicants/action [post]
 func (h *ApplicationHandler) CommunityAction(c *gin.Context) {
 	req, ok := Parse[model.ApplicationActionRequest](c)
 	if !ok {

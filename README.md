@@ -120,9 +120,9 @@ Regenerate after endpoint changes:
 
 | Method | Path | Description |
 |---|---|---|
-| GET | /community/projects | Own projects |
-| GET | /community/projects/:id/applicants | View applicants for own project |
-| POST | /community/applicants/action | Batch approve/reject applicants |
+| GET | /communities/projects | Own projects |
+| GET | /communities/projects/:id/applicants | View applicants for own project |
+| POST | /communities/applicants/action | Batch approve/reject applicants |
 
 ### Student
 

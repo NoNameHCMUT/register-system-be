@@ -216,7 +216,7 @@ func (h *ProjectHandler) ApproveProject(c *gin.Context) {
 // @Success      200 {array} model.ProjectResponse
 // @Failure      403 {object} map[string]string
 // @Failure      500 {object} map[string]string
-// @Router       /community/projects [get]
+// @Router       /communities/projects [get]
 func (h *ProjectHandler) ListByCommunity(c *gin.Context) {
 	projects, err := h.biz.ListByCommunity(GetUserID(c))
 	if err != nil {

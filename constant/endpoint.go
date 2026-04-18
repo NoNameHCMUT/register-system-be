@@ -23,7 +23,7 @@ const (
 	SchoolApplicants      = "/projects/:id/applicants"
 	SchoolApplicantAction = "/applicants/action"
 
-	CommunityBase              = "/community"
+	CommunityBase              = "/communities"
 	CommunityProjects          = "/projects"
 	CommunityProjectApplicants = "/projects/:id/applicants"
 	CommunityApplicantAction   = "/applicants/action"
