@@ -47,6 +47,7 @@ func Setup(
 	admin.Use(middleware.Auth(cfg.JWTSecret, userRepo), middleware.ActiveOnly(), middleware.RequireRole(string(model.RoleAdmin)))
 	{
 		admin.GET(constant.AdminPending, adminHandler.ListPending)
+		admin.GET(constant.AdminUsersActive, adminHandler.ListActiveUsers)
 		admin.POST(constant.AdminAccept, adminHandler.AcceptUser)
 		admin.POST(constant.AdminReject, adminHandler.RejectUser)
 	}

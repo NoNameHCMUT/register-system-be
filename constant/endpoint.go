@@ -7,10 +7,15 @@ const (
 	AuthRefresh  = "/refresh"
 	AuthMe       = "/me"
 
-	AdminBase    = "/admin"
-	AdminPending = "/users/pending"
-	AdminAccept  = "/users/:id/accept"
-	AdminReject  = "/users/:id/reject"
+	AdminBase         = "/admins"
+	AdminPending      = "/users/pending"
+	AdminUsersActive  = "/users/active"
+	AdminAccept       = "/users/:id/accept"
+	AdminReject       = "/users/:id/reject"
+	AdminProjects     = "/projects"
+	AdminApplications = "/applications"
+	AdminAffiliations = "/affiliations"
+	AdminAffiliation  = "/affiliations/:id"
 
 	AffiliationBase = "/affiliations"
 

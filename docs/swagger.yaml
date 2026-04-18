@@ -278,7 +278,30 @@ paths:
       summary: Reject a pending user
       tags:
       - Admin
-  /admin/users/pending:
+  /admins/users/active:
+    get:
+      description: Get all active users (is_active=true)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.UserResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List active users
+      tags:
+      - Admin
+  /admins/users/pending:
     get:
       description: Returns all users awaiting approval
       produces:

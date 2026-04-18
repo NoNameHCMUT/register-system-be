@@ -7,6 +7,7 @@ import (
 
 type AdminBusiness interface {
 	ListPending() ([]model.UserResponse, error)
+	ListActiveUsers() ([]model.UserResponse, error)
 	AcceptUser(userID uint) (*model.UserResponse, error)
 	RejectUser(userID uint) error
 }
@@ -21,6 +22,18 @@ func NewAdminBusiness(ur repo.UserRepo) AdminBusiness {
 
 func (b *adminBusiness) ListPending() ([]model.UserResponse, error) {
 	users, err := b.userRepo.FindPending()
+	if err != nil {
+		return nil, err
+	}
+	res := make([]model.UserResponse, len(users))
+	for i, u := range users {
+		res[i] = model.ToUserResponse(&u)
+	}
+	return res, nil
+}
+
+func (b *adminBusiness) ListActiveUsers() ([]model.UserResponse, error) {
+	users, err := b.userRepo.FindActive()
 	if err != nil {
 		return nil, err
 	}

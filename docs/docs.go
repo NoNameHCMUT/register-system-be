@@ -40,10 +40,6 @@ const docTemplate = `{
                             }
                         }
                     },
-<<<<<<< HEAD
-                    "500": {
-                        "description": "Internal Server Error",
-=======
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -55,7 +51,6 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden",
->>>>>>> origin
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -66,33 +61,21 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-        "/admins/users/{id}/accept": {
-=======
         "/admin/users/{id}/accept": {
->>>>>>> origin
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-<<<<<<< HEAD
-                "description": "Approve a pending user account",
-=======
                 "description": "Activates a user account so they can login",
->>>>>>> origin
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Admin"
                 ],
-<<<<<<< HEAD
-                "summary": "Accept user",
-=======
                 "summary": "Accept a pending user",
->>>>>>> origin
                 "parameters": [
                     {
                         "type": "integer",
@@ -109,8 +92,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.UserResponse"
                         }
                     },
-<<<<<<< HEAD
-=======
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -129,9 +110,11 @@ const docTemplate = `{
                             }
                         }
                     },
->>>>>>> origin
                     "404": {
                         "description": "Not Found",
+=======
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -142,33 +125,96 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-        "/admins/users/{id}/reject": {
-=======
-        "/admin/users/{id}/reject": {
->>>>>>> origin
-            "post": {
+        "/admins/users/active": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-<<<<<<< HEAD
-                "description": "Reject a pending user account",
-=======
-                "description": "Keeps the user account inactive",
->>>>>>> origin
+                "description": "Get all active users (is_active=true)",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Admin"
                 ],
-<<<<<<< HEAD
-                "summary": "Reject user",
-=======
+                "summary": "List active users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.UserResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admins/users/pending": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all users awaiting approval",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "List pending users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.UserResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+>>>>>>> develop
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}/reject": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Keeps the user account inactive",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
                 "summary": "Reject a pending user",
->>>>>>> origin
                 "parameters": [
                     {
                         "type": "integer",
@@ -188,8 +234,6 @@ const docTemplate = `{
                             }
                         }
                     },
-<<<<<<< HEAD
-=======
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -208,7 +252,6 @@ const docTemplate = `{
                             }
                         }
                     },
->>>>>>> origin
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -255,11 +298,7 @@ const docTemplate = `{
         },
         "/auth/login": {
             "post": {
-<<<<<<< HEAD
-                "description": "Login with username and password. Inactive users cannot login.",
-=======
                 "description": "Authenticates a user and returns JWT tokens. Only active accounts can login.",
->>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -272,11 +311,7 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-<<<<<<< HEAD
-                        "description": "Login credentials",
-=======
                         "description": "Login request",
->>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -311,10 +346,6 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-<<<<<<< HEAD
-                "description": "Get the profile of the currently authenticated user",
-=======
->>>>>>> origin
                 "produces": [
                     "application/json"
                 ],
@@ -352,10 +383,6 @@ const docTemplate = `{
         },
         "/auth/refresh": {
             "post": {
-<<<<<<< HEAD
-                "description": "Get new access/refresh token pair using a valid refresh token",
-=======
->>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -368,11 +395,7 @@ const docTemplate = `{
                 "summary": "Refresh tokens",
                 "parameters": [
                     {
-<<<<<<< HEAD
-                        "description": "Refresh token",
-=======
                         "description": "Refresh request",
->>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -402,11 +425,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-<<<<<<< HEAD
-                "description": "Register a new user account. Account starts inactive until admin approves.",
-=======
                 "description": "Creates an inactive account pending admin approval",
->>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -416,17 +435,10 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-<<<<<<< HEAD
-                "summary": "Register user",
-                "parameters": [
-                    {
-                        "description": "Register data",
-=======
                 "summary": "Register a new user",
                 "parameters": [
                     {
                         "description": "Register request",
->>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -454,170 +466,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-        "/communities/applicants/action": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Batch accept or reject applications as a community",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Community"
-                ],
-                "summary": "Community action on applications",
-                "parameters": [
-                    {
-                        "description": "Action data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ApplicationActionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/communities/projects": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all approved projects for the community's affiliation",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Community"
-                ],
-                "summary": "List community projects",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProjectResponse"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/communities/projects/{id}/applicants": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all applications for a project (community view)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Community"
-                ],
-                "summary": "List applicants for community",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.StudentProjectResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-=======
->>>>>>> origin
         "/projects": {
             "post": {
                 "security": [
@@ -625,11 +473,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-<<<<<<< HEAD
-                "description": "Create a new project (school or community only)",
-=======
                 "description": "Create a project (community/admin)",
->>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -642,11 +486,7 @@ const docTemplate = `{
                 "summary": "Create project",
                 "parameters": [
                     {
-<<<<<<< HEAD
-                        "description": "Project data",
-=======
                         "description": "Create project",
->>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -671,8 +511,6 @@ const docTemplate = `{
                             }
                         }
                     },
-<<<<<<< HEAD
-=======
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -682,7 +520,6 @@ const docTemplate = `{
                             }
                         }
                     },
->>>>>>> origin
                     "403": {
                         "description": "Forbidden",
                         "schema": {
@@ -695,8 +532,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-=======
         "/projects/my-list": {
             "get": {
                 "security": [
@@ -755,7 +590,6 @@ const docTemplate = `{
                 }
             }
         },
->>>>>>> origin
         "/projects/{id}": {
             "patch": {
                 "security": [
@@ -763,11 +597,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-<<<<<<< HEAD
-                "description": "Update a project owned by the current user",
-=======
                 "description": "Update a project (owner community/admin)",
->>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -787,11 +617,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-<<<<<<< HEAD
-                        "description": "Update fields",
-=======
                         "description": "Update project",
->>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -816,325 +642,8 @@ const docTemplate = `{
                             }
                         }
                     },
-<<<<<<< HEAD
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/projects/{id}/banner": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Upload a banner image for a project",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Project"
-                ],
-                "summary": "Upload project banner",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Banner image",
-                        "name": "banner",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.ProjectResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/schools/applicants/action": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Batch accept or reject applications as a school",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "School"
-                ],
-                "summary": "School action on applications",
-                "parameters": [
-                    {
-                        "description": "Action data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ApplicationActionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/schools/projects": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all projects belonging to the school's affiliation",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "School"
-                ],
-                "summary": "List school projects",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProjectResponse"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/schools/projects/pending": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get projects pending approval in the school's affiliation",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "School"
-                ],
-                "summary": "List pending school projects",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProjectResponse"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/schools/projects/{id}/applicants": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all applications for a project (school view)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "School"
-                ],
-                "summary": "List applicants for school",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.StudentProjectResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/schools/projects/{id}/approve": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "School approves a pending project",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "School"
-                ],
-                "summary": "Approve project",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.ProjectResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-=======
                     "401": {
                         "description": "Unauthorized",
->>>>>>> origin
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -1162,285 +671,12 @@ const docTemplate = `{
                     }
                 }
             }
-<<<<<<< HEAD
-        },
-        "/students/applications": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all applications submitted by the current student",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Student"
-                ],
-                "summary": "List student applications",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.StudentProjectResponse"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/students/projects": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get approved projects available in the student's affiliation",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Student"
-                ],
-                "summary": "List approved projects for student",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProjectResponse"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/students/projects/{id}/apply": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Student applies to a project by its ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Student"
-                ],
-                "summary": "Apply to project",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.StudentProjectResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/me": {
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update current user's contact information (full_name, phone)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Update profile",
-                "parameters": [
-                    {
-                        "description": "Profile fields",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.UserUpdateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.UserResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/me/avatar": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Upload a profile picture for the current user",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Upload avatar",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Avatar image",
-                        "name": "avatar",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.UserResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "model.AffiliationCreateRequest": {
-            "type": "object",
-            "required": [
-                "std_name"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "std_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.AffiliationResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-=======
         }
     },
     "definitions": {
         "model.AffiliationResponse": {
             "type": "object",
             "properties": {
->>>>>>> origin
                 "id": {
                     "type": "integer"
                 },
@@ -1449,60 +685,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-        "model.AffiliationUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "std_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.ApplicationActionRequest": {
-            "type": "object",
-            "required": [
-                "action",
-                "application_ids"
-            ],
-            "properties": {
-                "action": {
-                    "type": "string",
-                    "enum": [
-                        "approve",
-                        "reject"
-                    ]
-                },
-                "application_ids": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "model.ApplicationStatus": {
-            "type": "string",
-            "enum": [
-                "SCHOOL_PENDING",
-                "SCHOOL_REJECT",
-                "COMMUNITY_PENDING",
-                "COMMUNITY_REJECT",
-                "APPROVED"
-            ],
-            "x-enum-varnames": [
-                "StatusSchoolPending",
-                "StatusSchoolReject",
-                "StatusCommunityPending",
-                "StatusCommunityReject",
-                "StatusApproved"
-            ]
-        },
-=======
->>>>>>> origin
         "model.AuthResponse": {
             "type": "object",
             "properties": {
@@ -1551,17 +733,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "form_end_day": {
-<<<<<<< HEAD
-                    "type": "string"
-                },
-                "form_start_day": {
-=======
                     "description": "RFC3339",
                     "type": "string"
                 },
                 "form_start_day": {
                     "description": "RFC3339",
->>>>>>> origin
                     "type": "string"
                 },
                 "name": {
@@ -1571,17 +747,11 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "project_end_day": {
-<<<<<<< HEAD
-                    "type": "string"
-                },
-                "project_start_day": {
-=======
                     "description": "RFC3339",
                     "type": "string"
                 },
                 "project_start_day": {
                     "description": "RFC3339",
->>>>>>> origin
                     "type": "string"
                 }
             }
@@ -1595,12 +765,6 @@ const docTemplate = `{
                 "affiliation_id": {
                     "type": "integer"
                 },
-<<<<<<< HEAD
-                "banner_url": {
-                    "type": "string"
-                },
-=======
->>>>>>> origin
                 "community_user": {
                     "$ref": "#/definitions/model.UserResponse"
                 },
@@ -1610,12 +774,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-<<<<<<< HEAD
-                "date_approved": {
-                    "type": "string"
-                },
-=======
->>>>>>> origin
                 "description": {
                     "type": "string"
                 },
@@ -1652,17 +810,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "form_end_day": {
-<<<<<<< HEAD
-                    "type": "string"
-                },
-                "form_start_day": {
-=======
                     "description": "RFC3339",
                     "type": "string"
                 },
                 "form_start_day": {
                     "description": "RFC3339",
->>>>>>> origin
                     "type": "string"
                 },
                 "name": {
@@ -1672,17 +824,11 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "project_end_day": {
-<<<<<<< HEAD
-                    "type": "string"
-                },
-                "project_start_day": {
-=======
                     "description": "RFC3339",
                     "type": "string"
                 },
                 "project_start_day": {
                     "description": "RFC3339",
->>>>>>> origin
                     "type": "string"
                 }
             }
@@ -1722,12 +868,6 @@ const docTemplate = `{
                     "type": "string",
                     "minLength": 6
                 },
-<<<<<<< HEAD
-                "phone": {
-                    "type": "string"
-                },
-=======
->>>>>>> origin
                 "role": {
                     "enum": [
                         "admin",
@@ -1781,35 +921,6 @@ const docTemplate = `{
                 "RoleCommunity"
             ]
         },
-<<<<<<< HEAD
-        "model.StudentProjectResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "project": {
-                    "$ref": "#/definitions/model.ProjectResponse"
-                },
-                "project_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "$ref": "#/definitions/model.ApplicationStatus"
-                },
-                "user": {
-                    "$ref": "#/definitions/model.UserResponse"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
-=======
->>>>>>> origin
         "model.UserResponse": {
             "type": "object",
             "properties": {
@@ -1819,12 +930,6 @@ const docTemplate = `{
                 "affiliation_id": {
                     "type": "integer"
                 },
-<<<<<<< HEAD
-                "avatar_url": {
-                    "type": "string"
-                },
-=======
->>>>>>> origin
                 "email": {
                     "type": "string"
                 },
@@ -1837,12 +942,6 @@ const docTemplate = `{
                 "is_active": {
                     "type": "boolean"
                 },
-<<<<<<< HEAD
-                "phone": {
-                    "type": "string"
-                },
-=======
->>>>>>> origin
                 "role": {
                     "$ref": "#/definitions/model.Role"
                 },
@@ -1853,20 +952,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-<<<<<<< HEAD
-        },
-        "model.UserUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "full_name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-=======
->>>>>>> origin
         }
     },
     "securityDefinitions": {
