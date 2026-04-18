@@ -623,7 +623,7 @@ paths:
       summary: Register user
       tags:
       - Auth
-  /community/applicants/action:
+  /communities/applicants/action:
     post:
       consumes:
       - application/json
@@ -661,7 +661,7 @@ paths:
       summary: Community action on applications
       tags:
       - Community
-  /community/projects:
+  /communities/projects:
     get:
       description: Get all approved projects for the community's affiliation
       produces:
@@ -690,7 +690,7 @@ paths:
       summary: List community projects
       tags:
       - Community
-  /community/projects/{id}/applicants:
+  /communities/projects/{id}/applicants:
     get:
       description: Get all applications for a project (community view)
       parameters:

@@ -236,7 +236,7 @@ func TestE2EFullFlow(t *testing.T) {
 	}
 
 	// 6. Community views project -> sees it hasn't been approved
-	w = doRequest(t, "GET", "/community/projects", nil, communityToken)
+	w = doRequest(t, "GET", "/communities/projects", nil, communityToken)
 	resp := parseResponse(t, w)
 	data := resp["data"].([]interface{})
 	proj := data[0].(map[string]interface{})
@@ -259,7 +259,7 @@ func TestE2EFullFlow(t *testing.T) {
 	}
 
 	// 9. Community views project -> sees it has been approved
-	w = doRequest(t, "GET", "/community/projects", nil, communityToken)
+	w = doRequest(t, "GET", "/communities/projects", nil, communityToken)
 	resp = parseResponse(t, w)
 	data = resp["data"].([]interface{})
 	proj = data[0].(map[string]interface{})
@@ -302,7 +302,7 @@ func TestE2EFullFlow(t *testing.T) {
 	}
 
 	// 14. Community opens the project -> sees no applicant (SCHOOL_PENDING not visible)
-	w = doRequest(t, "GET", "/community/projects/1/applicants", nil, communityToken)
+	w = doRequest(t, "GET", "/communities/projects/1/applicants", nil, communityToken)
 	resp = parseResponse(t, w)
 	data = resp["data"].([]interface{})
 	if len(data) != 0 {
@@ -330,7 +330,7 @@ func TestE2EFullFlow(t *testing.T) {
 	}
 
 	// 17. Community opens the project -> sees applicant
-	w = doRequest(t, "GET", "/community/projects/1/applicants", nil, communityToken)
+	w = doRequest(t, "GET", "/communities/projects/1/applicants", nil, communityToken)
 	resp = parseResponse(t, w)
 	data = resp["data"].([]interface{})
 	if len(data) == 0 {
@@ -338,7 +338,7 @@ func TestE2EFullFlow(t *testing.T) {
 	}
 
 	// 18. Community accepts the application
-	w = doRequest(t, "POST", "/community/applicants/action", model.ApplicationActionRequest{
+	w = doRequest(t, "POST", "/communities/applicants/action", model.ApplicationActionRequest{
 		ApplicationIDs: []uint{1}, Action: "approve",
 	}, communityToken)
 	if w.Code != 200 {

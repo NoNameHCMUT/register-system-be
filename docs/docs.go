@@ -566,7 +566,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/applicants/action": {
+        "/communities/applicants/action": {
             "post": {
                 "security": [
                     {
@@ -626,7 +626,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/projects": {
+        "/communities/projects": {
             "get": {
                 "security": [
                     {
@@ -672,7 +672,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/projects/{id}/applicants": {
+        "/communities/projects/{id}/applicants": {
             "get": {
                 "security": [
                     {
