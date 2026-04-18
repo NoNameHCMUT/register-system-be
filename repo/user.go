@@ -18,6 +18,7 @@ type UserRepo interface {
 	UpdateProfile(userID uint, phone string, avatarURL string) error
 	UpdateFields(userID uint, fields map[string]interface{}) error
 	FindAll() ([]model.User, error)
+	RemoveUser(userID uint) error
 }
 
 type userRepo struct {
@@ -104,4 +105,8 @@ func (r *userRepo) FindAll() ([]model.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *userRepo) RemoveUser(userID uint) error {
+	return r.db.Delete(&model.User{}, userID).Error
 }
