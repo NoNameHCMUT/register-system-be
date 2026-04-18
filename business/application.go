@@ -2,10 +2,10 @@ package business
 
 import (
 	"errors"
-	"time"
 	"register-system-be/email"
 	"register-system-be/model"
 	"register-system-be/repo"
+	"time"
 )
 
 type ApplicationBusiness interface {
