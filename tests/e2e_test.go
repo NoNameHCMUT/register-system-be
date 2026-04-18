@@ -165,11 +165,11 @@ func TestE2EFullFlow(t *testing.T) {
 	_, adminToken := createTestAdmin(t)
 
 	// 2. Admin adds 2 affiliations (1 school, 1 community)
-	w := doRequest(t, "POST", "/admin/affiliations", model.AffiliationCreateRequest{StdName: "BK University", Description: "School"}, adminToken)
+	w := doRequest(t, "POST", "/admins/affiliations", model.AffiliationCreateRequest{StdName: "BK University", Description: "School"}, adminToken)
 	if w.Code != 201 {
 		t.Fatalf("create school affiliation: %d %s", w.Code, w.Body.String())
 	}
-	w = doRequest(t, "POST", "/admin/affiliations", model.AffiliationCreateRequest{StdName: "Binh Phuoc Community", Description: "Community"}, adminToken)
+	w = doRequest(t, "POST", "/admins/affiliations", model.AffiliationCreateRequest{StdName: "Binh Phuoc Community", Description: "Community"}, adminToken)
 	if w.Code != 201 {
 		t.Fatalf("create community affiliation: %d %s", w.Code, w.Body.String())
 	}
@@ -212,7 +212,7 @@ func TestE2EFullFlow(t *testing.T) {
 	var pendingUsers []model.User
 	db.Where("is_active = ?", false).Find(&pendingUsers)
 	for _, u := range pendingUsers {
-		doRequest(t, "POST", fmt.Sprintf("/admin/users/%d/accept", u.ID), nil, adminToken)
+		doRequest(t, "POST", fmt.Sprintf("/admins/users/%d/accept", u.ID), nil, adminToken)
 	}
 
 	schoolToken := getToken(t, "school_user", "school456")
