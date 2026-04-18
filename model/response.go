@@ -23,8 +23,8 @@ type UserResponse struct {
 	Email         string               `json:"email"`
 	AffiliationID uint                 `json:"affiliation_id"`
 	Affiliation   *AffiliationResponse `json:"affiliation,omitempty"`
-	AvatarURL     string               `json:"avatar_url,omitempty"`
-	Phone         string               `json:"phone,omitempty"`
+	AvatarURL     string               `json:"avatar_url"`
+	Phone         string               `json:"phone"`
 }
 
 type AffiliationResponse struct {

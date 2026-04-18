@@ -122,66 +122,6 @@ async function seed() {
     console.log(`  id=${res.rows[0].id} | ${u.username} | ${u.role} | password=${u.password_plaintext}`);
   }
 
-  const affBachKhoa = affMap['Dai hoc Bach Khoa TP.HCM'];
-  const affKinhTeLuat = affMap['Dai hoc Kinh te - Luat'];
-  const leader_bp = userMap['leader_binh_phuoc'];
-  const leader_dl = userMap['leader_daklak'];
-
-  const projectResult = await client.query(`
-    INSERT INTO projects (affiliation_id, community_user_id, name, description, num_max, project_start_day, project_end_day, form_start_day, form_end_day, date_approved, created_at)
-    VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW()),
-      ($11, $12, $13, $14, $15, $16, $17, $18, $19, $20, NOW()),
-      ($21, $22, $23, $24, $25, $26, $27, $28, $29, $30, NOW())
-    RETURNING id, name;
-  `, [
-    // leader_binh_phuoc creates 2 projects: 1 for Bach Khoa (approved), 1 for Kinh Te Luat (pending)
-    affBachKhoa, leader_bp,
-    'Mua He Xanh 2026 - Bach Khoa',
-    'Tinh nguyen tai Dai hoc Bach Khoa TP.HCM',
-    30,
-    '2026-07-01T00:00:00Z', '2026-07-31T23:59:59Z',
-    '2026-05-01T00:00:00Z', '2026-06-15T23:59:59Z',
-    '2026-04-10T10:00:00Z',
-
-    affKinhTeLuat, leader_bp,
-    'Mua He Xanh 2026 - Kinh Te Luat',
-    'Tinh nguyen tai Dai hoc Kinh te - Luat',
-    25,
-    '2026-07-01T00:00:00Z', '2026-07-31T23:59:59Z',
-    '2026-05-01T00:00:00Z', '2026-06-15T23:59:59Z',
-    null,
-
-    // leader_daklak creates 1 project for Kinh Te Luat (approved)
-    affKinhTeLuat, leader_dl,
-    'Mua He Xanh 2026 - Kinh Te Luat Phase 2',
-    'Dot 2 tinh nguyen tai Dai hoc Kinh te - Luat',
-    20,
-    '2026-08-01T00:00:00Z', '2026-08-31T23:59:59Z',
-    '2026-06-16T00:00:00Z', '2026-07-15T23:59:59Z',
-    '2026-04-12T10:00:00Z',
-  ]);
-
-  console.log('Projects:');
-  projectResult.rows.forEach(r => console.log(`  [${r.id}] ${r.name}`));
-
-  const approvedBachKhoa = projectResult.rows.find(r => r.name === 'Mua He Xanh 2026 - Bach Khoa').id;
-  const approvedKinhTeLuat = projectResult.rows.find(r => r.name === 'Mua He Xanh 2026 - Kinh Te Luat Phase 2').id;
-
-  const appResult = await client.query(`
-    INSERT INTO student_projects (user_id, project_id, status, created_at)
-    VALUES
-      ($1, $2, $3, NOW()),
-      ($4, $5, $6, NOW())
-    RETURNING id, status;
-  `, [
-    userMap['student_nhu'], approvedBachKhoa, 'SCHOOL_PENDING',
-    userMap['student_minh'], approvedKinhTeLuat, 'SCHOOL_PENDING',
-  ]);
-
-  console.log('Applications:');
-  appResult.rows.forEach(r => console.log(`  id=${r.id} | status=${r.status}`));
-
   console.log(`\nSeeded ${users.length} users, ${projectResult.rows.length} projects, ${appResult.rows.length} applications`);
   await client.end();
 }
