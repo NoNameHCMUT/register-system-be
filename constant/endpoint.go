@@ -9,6 +9,7 @@ const (
 
 	AdminBase         = "/admins"
 	AdminPending      = "/users/pending"
+	AdminUsersActive  = "/users/active"
 	AdminAccept       = "/users/:id/accept"
 	AdminReject       = "/users/:id/reject"
 	AdminProjects     = "/projects"
