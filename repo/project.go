@@ -83,7 +83,18 @@ func (r *projectRepo) GetByAffiliationID(affiliationID uint) ([]model.Project, e
 }
 
 func (r *projectRepo) Update(p *model.Project) error {
-	return r.db.Save(p).Error
+	return r.db.Model(p).Where("id = ?", p.ID).Updates(map[string]interface{}{
+		"affiliation_id":    p.AffiliationID,
+		"community_user_id": p.CommunityUserID,
+		"name":              p.Name,
+		"description":       p.Description,
+		"num_max":           p.NumMax,
+		"project_start_day": p.ProjectStartDay,
+		"project_end_day":   p.ProjectEndDay,
+		"form_start_day":    p.FormStartDay,
+		"form_end_day":      p.FormEndDay,
+		"banner_url":        p.BannerURL,
+	}).Error
 }
 
 func (r *projectRepo) UpdateDateApproved(id uint, dateApproved interface{}) error {
