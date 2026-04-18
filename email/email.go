@@ -124,11 +124,11 @@ func NotifyApplicationStatus(sender EmailSender, to string, status string, proje
 	subject := "Update on your application - " + projectName
 	body := fmt.Sprintf(
 		"Hello,\n\n"+
-		"We wanted to let you know that your application for the project \"%s\" has been updated.\n\n"+
-		"Current status: %s\n\n"+
-		"You can log in to the system to view details.\n\n"+
-		"Regards,\n"+
-		"Register System",
+			"We wanted to let you know that your application for the project \"%s\" has been updated.\n\n"+
+			"Current status: %s\n\n"+
+			"You can log in to the system to view details.\n\n"+
+			"Regards,\n"+
+			"Register System",
 		projectName,
 		status,
 	)
