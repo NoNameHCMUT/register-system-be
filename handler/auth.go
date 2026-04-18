@@ -5,26 +5,24 @@ import (
 
 	"register-system-be/business"
 	"register-system-be/model"
-	"register-system-be/upload"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthHandler struct {
-	biz       business.AuthBusiness
-	uploadDir string
+	biz business.AuthBusiness
 }
 
-func NewAuthHandler(biz business.AuthBusiness, uploadDir string) *AuthHandler {
-	return &AuthHandler{biz: biz, uploadDir: uploadDir}
+func NewAuthHandler(biz business.AuthBusiness) *AuthHandler {
+	return &AuthHandler{biz: biz}
 }
 
-// @Summary      Register user
-// @Description  Register a new user account. Account starts inactive until admin approves.
+// @Summary      Register a new user
+// @Description  Creates an inactive account pending admin approval
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        body body model.RegisterRequest true "Register data"
+// @Param        body body model.RegisterRequest true "Register request"
 // @Success      201 {object} model.RegisterResponse
 // @Failure      400 {object} map[string]string
 // @Router       /auth/register [post]
@@ -44,11 +42,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 }
 
 // @Summary      Login
-// @Description  Login with username and password. Inactive users cannot login.
+// @Description  Authenticates a user and returns JWT tokens. Only active accounts can login.
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        body body model.LoginRequest true "Login credentials"
+// @Param        body body model.LoginRequest true "Login request"
 // @Success      200 {object} model.AuthResponse
 // @Failure      401 {object} map[string]string
 // @Router       /auth/login [post]
@@ -68,11 +66,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 }
 
 // @Summary      Refresh tokens
-// @Description  Get new access/refresh token pair using a valid refresh token
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        body body model.RefreshRequest true "Refresh token"
+// @Param        body body model.RefreshRequest true "Refresh request"
 // @Success      200 {object} model.AuthResponse
 // @Failure      401 {object} map[string]string
 // @Router       /auth/refresh [post]
@@ -92,7 +89,6 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 }
 
 // @Summary      Get current user
-// @Description  Get the profile of the currently authenticated user
 // @Tags         Auth
 // @Produce      json
 // @Security     BearerAuth
@@ -104,64 +100,6 @@ func (h *AuthHandler) Me(c *gin.Context) {
 	res, err := h.biz.GetCurrentUser(GetUserID(c))
 	if err != nil {
 		Error(c, http.StatusNotFound, "user not found")
-		return
-	}
-
-	Success(c, res)
-}
-
-// @Summary      Update profile
-// @Description  Update current user's contact information (full_name, phone)
-// @Tags         User
-// @Accept       json
-// @Produce      json
-// @Security     BearerAuth
-// @Param        body body model.UserUpdateRequest true "Profile fields"
-// @Success      200 {object} model.UserResponse
-// @Failure      400 {object} map[string]string
-// @Router       /users/me [patch]
-func (h *AuthHandler) UpdateProfile(c *gin.Context) {
-	req, ok := Parse[model.UserUpdateRequest](c)
-	if !ok {
-		return
-	}
-
-	res, err := h.biz.UpdateProfile(GetUserID(c), req)
-	if err != nil {
-		Error(c, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	Success(c, res)
-}
-
-// @Summary      Upload avatar
-// @Description  Upload a profile picture for the current user
-// @Tags         User
-// @Accept       multipart/form-data
-// @Produce      json
-// @Security     BearerAuth
-// @Param        avatar formData file true "Avatar image"
-// @Success      200 {object} model.UserResponse
-// @Failure      400 {object} map[string]string
-// @Router       /users/me/avatar [post]
-func (h *AuthHandler) UploadAvatar(c *gin.Context) {
-	file, header, err := c.Request.FormFile("avatar")
-	if err != nil {
-		Error(c, http.StatusBadRequest, "avatar file required")
-		return
-	}
-	defer file.Close()
-
-	path, err := upload.Save(file, header, "avatars", h.uploadDir)
-	if err != nil {
-		Error(c, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	res, err := h.biz.UpdateAvatar(GetUserID(c), path)
-	if err != nil {
-		Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
 

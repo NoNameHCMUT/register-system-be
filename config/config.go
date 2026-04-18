@@ -20,13 +20,6 @@ type Config struct {
 	JWTAccessExpiry  time.Duration
 	JWTRefreshExpiry time.Duration
 	ServerPort       string
-	UploadDir        string
-	MaxUploadSize    int64
-	SMTPHost         string
-	SMTPPort         string
-	SMTPUser         string
-	SMTPPassword     string
-	SMTPFrom         string
 }
 
 func Load() *Config {
@@ -45,13 +38,6 @@ func Load() *Config {
 		JWTAccessExpiry:  mustParseDuration(getEnv("JWT_ACCESS_EXPIRY", "15m")),
 		JWTRefreshExpiry: mustParseDuration(getEnv("JWT_REFRESH_EXPIRY", "168h")),
 		ServerPort:       getEnv("SERVER_PORT", "8080"),
-		UploadDir:        getEnv("UPLOAD_DIR", "uploads"),
-		MaxUploadSize:    mustParseInt64(getEnv("MAX_UPLOAD_SIZE", "5242880")),
-		SMTPHost:         getEnv("SMTP_HOST", "smtp.gmail.com"),
-		SMTPPort:         getEnv("SMTP_PORT", "587"),
-		SMTPUser:         getEnv("SMTP_USER", ""),
-		SMTPPassword:     getEnv("SMTP_PASSWORD", ""),
-		SMTPFrom:         getEnv("SMTP_FROM", ""),
 	}
 }
 
@@ -68,15 +54,4 @@ func mustParseDuration(s string) time.Duration {
 		panic("invalid duration: " + s)
 	}
 	return d
-}
-
-func mustParseInt64(s string) int64 {
-	var v int64
-	for _, c := range s {
-		if c < '0' || c > '9' {
-			panic("invalid integer: " + s)
-		}
-		v = v*10 + int64(c-'0')
-	}
-	return v
 }

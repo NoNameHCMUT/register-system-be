@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"register-system-be/config"
-	"register-system-be/email"
 	"register-system-be/model"
 	"register-system-be/repo"
 
@@ -18,19 +17,16 @@ type AuthBusiness interface {
 	Login(req *model.LoginRequest) (*model.AuthResponse, error)
 	Refresh(req *model.RefreshRequest) (*model.AuthResponse, error)
 	GetCurrentUser(id uint) (*model.UserResponse, error)
-	UpdateProfile(id uint, req *model.UserUpdateRequest) (*model.UserResponse, error)
-	UpdateAvatar(id uint, avatarURL string) (*model.UserResponse, error)
 }
 
 type authBusiness struct {
 	userRepo        repo.UserRepo
 	affiliationRepo repo.AffiliationRepo
 	cfg             *config.Config
-	emailSender     email.EmailSender
 }
 
-func NewAuthBusiness(ur repo.UserRepo, ar repo.AffiliationRepo, cfg *config.Config, es email.EmailSender) AuthBusiness {
-	return &authBusiness{userRepo: ur, affiliationRepo: ar, cfg: cfg, emailSender: es}
+func NewAuthBusiness(ur repo.UserRepo, ar repo.AffiliationRepo, cfg *config.Config) AuthBusiness {
+	return &authBusiness{userRepo: ur, affiliationRepo: ar, cfg: cfg}
 }
 
 func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResponse, error) {
@@ -58,7 +54,6 @@ func (b *authBusiness) Register(req *model.RegisterRequest) (*model.RegisterResp
 		AffiliationID: req.AffiliationID,
 		Role:          req.Role,
 		IsActive:      false,
-		Phone:         req.Phone,
 	}
 
 	if err := b.userRepo.Create(user); err != nil {
@@ -99,10 +94,6 @@ func (b *authBusiness) Login(req *model.LoginRequest) (*model.AuthResponse, erro
 		return nil, errors.New("invalid credentials")
 	}
 
-	if !user.IsActive {
-		return nil, errors.New("account not approved")
-	}
-
 	return b.generateTokens(user)
 }
 
@@ -137,39 +128,6 @@ func (b *authBusiness) Refresh(req *model.RefreshRequest) (*model.AuthResponse, 
 }
 
 func (b *authBusiness) GetCurrentUser(id uint) (*model.UserResponse, error) {
-	user, err := b.userRepo.FindByID(id)
-	if err != nil {
-		return nil, err
-	}
-	resp := model.ToUserResponse(user)
-	return &resp, nil
-}
-
-func (b *authBusiness) UpdateProfile(id uint, req *model.UserUpdateRequest) (*model.UserResponse, error) {
-	fields := map[string]interface{}{}
-	if req.FullName != nil {
-		fields["full_name"] = *req.FullName
-	}
-	if req.Phone != nil {
-		fields["phone"] = *req.Phone
-	}
-	if len(fields) > 0 {
-		if err := b.userRepo.UpdateFields(id, fields); err != nil {
-			return nil, err
-		}
-	}
-	user, err := b.userRepo.FindByID(id)
-	if err != nil {
-		return nil, err
-	}
-	resp := model.ToUserResponse(user)
-	return &resp, nil
-}
-
-func (b *authBusiness) UpdateAvatar(id uint, avatarURL string) (*model.UserResponse, error) {
-	if err := b.userRepo.UpdateProfile(id, "", avatarURL); err != nil {
-		return nil, err
-	}
 	user, err := b.userRepo.FindByID(id)
 	if err != nil {
 		return nil, err

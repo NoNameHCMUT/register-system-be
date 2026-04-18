@@ -34,7 +34,3 @@ func GetUserID(c *gin.Context) uint {
 func GetRole(c *gin.Context) string {
 	return c.MustGet("role").(string)
 }
-
-func GetIsActive(c *gin.Context) bool {
-	return c.GetBool("is_active")
-}

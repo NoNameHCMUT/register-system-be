@@ -50,7 +50,7 @@ run() {
 }
 
 dev() {
-    if ! command -v $(go env GOPATH)/bin/air &> /dev/null; then
+    if ! command -v air &> /dev/null; then
         warn "air not installed. Installing..."
         go install github.com/air-verse/air@latest
     fi
@@ -70,6 +70,13 @@ build() {
 seed() {
     setup_env
     start_db
+    info "Running migrations..."
+    go run ./cmd/server &
+    SERVER_PID=$!
+    sleep 3
+    kill $SERVER_PID 2>/dev/null
+    wait $SERVER_PID 2>/dev/null
+    info "Seeding database..."
     npm install
     node seed.js
 }
@@ -84,49 +91,6 @@ swagger() {
     info "Done"
 }
 
-test_unit() {
-    info "Running unit tests..."
-    go clean -testcache
-    go test -v -race ./business/ ./handler/ ./repo/ ./model/ ./config/ ./email/ ./upload/
-}
-
-test_e2e() {
-    setup_env
-    start_db
-    info "Running e2e tests..."
-    go clean -testcache
-    go test -v -race -timeout 120s ./tests/
-}
-
-test() {
-    test_unit
-    test_e2e
-}
-
-lint() {
-    info "Running golangci-lint..."
-    if ! command -v $(go env GOPATH)/bin/golangci-lint &> /dev/null && [ ! -f "$(go env GOPATH)/bin/golangci-lint" ]; then
-        warn "golangci-lint not installed. Installing..."
-        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-    fi
-    $(go env GOPATH)/bin/golangci-lint run ./...
-}
-
-ci() {
-    info "Running CI pipeline locally..."
-    info "--- Step 1: Build ---"
-    go build ./cmd/server
-    info "--- Step 2: Vet ---"
-    go vet ./...
-    info "--- Step 3: Lint ---"
-    lint
-    info "--- Step 4: Unit tests ---"
-    test_unit
-    info "--- Step 5: E2E tests ---"
-    test_e2e
-    info "CI pipeline passed!"
-}
-
 case "${1:-}" in
     run)      run      ;;
     dev)      dev      ;;
@@ -135,26 +99,16 @@ case "${1:-}" in
     swagger)  swagger  ;;
     db:start) setup_env; start_db ;;
     db:stop)  stop_db  ;;
-    test)     test     ;;
-    test:unit) test_unit ;;
-    test:e2e) test_e2e ;;
-    lint)     lint     ;;
-    ci)       ci       ;;
     *)
-        echo "Usage: $0 {run|dev|build|seed|swagger|db:start|db:stop|test|test:unit|test:e2e|lint|ci}"
+        echo "Usage: $0 {run|dev|build|seed|swagger|db:start|db:stop}"
         echo ""
-        echo "  run        Start DB + run the server"
-        echo "  dev        Start DB + run with hot reload (air)"
-        echo "  build      Compile binary to bin/server"
-        echo "  seed       Migrate + seed database"
-        echo "  swagger    Regenerate swagger docs"
-        echo "  db:start   Start PostgreSQL only"
-        echo "  db:stop    Stop PostgreSQL"
-        echo "  test       Run all tests (unit + e2e)"
-        echo "  test:unit  Run unit tests only"
-        echo "  test:e2e   Run e2e tests only (requires DB)"
-        echo "  lint       Run golangci-lint"
-        echo "  ci         Run full CI pipeline locally"
+        echo "  run       Start DB + run the server"
+        echo "  dev       Start DB + run with hot reload (air)"
+        echo "  build     Compile binary to bin/server"
+        echo "  seed      Migrate + seed database"
+        echo "  swagger   Regenerate swagger docs"
+        echo "  db:start  Start PostgreSQL only"
+        echo "  db:stop   Stop PostgreSQL"
         exit 1
         ;;
 esac

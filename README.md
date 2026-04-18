@@ -1,6 +1,6 @@
 # Register System BE
 
-Go + Gin backend with JWT auth, role-based access, and multi-stage project approval flow.
+Go + Gin backend with JWT auth and role-based access.
 
 ## Setup
 
@@ -21,6 +21,7 @@ Dev mode with hot reload:
 ./dev.sh dev
 ```
 
+<<<<<<< HEAD
 ## Commands
 
 | Command | Description |
@@ -49,6 +50,20 @@ make ci           # full CI pipeline
 ```
 
 ## Seed Database
+=======
+## Seed Database
+
+First run the server once to create tables, then seed:
+
+```bash
+go run ./cmd/server &   # creates tables via AutoMigrate
+# Ctrl+C after "Server starting"
+npm install
+node seed.js
+```
+
+Or use the shortcut:
+>>>>>>> origin
 
 ```bash
 ./dev.sh seed
@@ -73,6 +88,7 @@ Regenerate after endpoint changes:
 ./dev.sh swagger
 ```
 
+<<<<<<< HEAD
 ## API Endpoints
 
 ### Public
@@ -153,6 +169,32 @@ Student applies → SCHOOL_PENDING
 - Students can only apply to school-approved projects within their affiliation
 - Applications are only accepted during the project's form registration period
 - Batch approve/reject supported (multiple application IDs per request)
+=======
+## Commands
+
+| Command | Description |
+|---|---|
+| `./dev.sh run` | Start DB + run server |
+| `./dev.sh dev` | Start DB + hot reload |
+| `./dev.sh build` | Compile to `bin/server` |
+| `./dev.sh seed` | Migrate + seed DB |
+| `./dev.sh swagger` | Regenerate swagger docs |
+| `./dev.sh db:start` | Start PostgreSQL |
+| `./dev.sh db:stop` | Stop PostgreSQL |
+
+## API Endpoints
+
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| POST | /auth/register | No | Register user |
+| POST | /auth/login | No | Login |
+| POST | /auth/refresh | No | Refresh tokens |
+| GET | /auth/me | Yes | Current user |
+| GET | /admin/users/pending | Admin | List pending users |
+| POST | /admin/users/:id/accept | Admin | Accept user |
+| POST | /admin/users/:id/reject | Admin | Reject user |
+| GET | /health | No | Health check |
+>>>>>>> origin
 
 ## Adding a New Endpoint
 
@@ -161,7 +203,10 @@ Student applies → SCHOOL_PENDING
 3. **Code handler** in `handler/` (use `Parse[T]`)
 4. **Code business** in `business/` (interface + impl)
 5. **Code repo** in `repo/` (interface + impl)
+<<<<<<< HEAD
 6. **Wire** in `cmd/server/main.go`
+=======
+>>>>>>> origin
 
 ## Project Structure
 
@@ -170,6 +215,7 @@ cmd/server/     Entry point
 handler/        HTTP handlers + Parse[T] helper
 business/       Business logic (interfaces + impl)
 repo/           Database operations (interfaces + impl)
+<<<<<<< HEAD
 middleware/      Auth, ActiveOnly, RequireRole, CORS
 model/          GORM models + DTOs + enums
 config/         Env config
@@ -179,4 +225,12 @@ email/          SMTP email sender
 upload/         File upload utility
 docs/           Swagger spec (generated)
 tests/          E2E tests
+=======
+middleware/      Auth, Role, CORS
+model/          GORM models + DTOs
+config/         Env config
+constant/       API endpoint paths
+router/         Route registration
+docs/           Swagger spec (generated)
+>>>>>>> origin
 ```

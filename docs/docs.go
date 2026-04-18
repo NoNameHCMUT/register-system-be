@@ -15,235 +15,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admins/affiliations": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Add a new affiliation",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Create affiliation",
-                "parameters": [
-                    {
-                        "description": "Affiliation data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.AffiliationCreateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.AffiliationResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/admins/affiliations/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Remove an affiliation by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Delete affiliation",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Affiliation ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update an existing affiliation",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Update affiliation",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Affiliation ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update fields",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.AffiliationUpdateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.AffiliationResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/admins/applications": {
+        "/admin/users/pending": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Admin view of all student applications",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "List all applications",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.StudentProjectResponse"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/admins/projects": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Admin master view of all projects",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "List all projects",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProjectResponse"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/admins/users/pending": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all users awaiting approval",
+                "description": "Returns all users awaiting approval",
                 "produces": [
                     "application/json"
                 ],
@@ -261,8 +40,22 @@ const docTemplate = `{
                             }
                         }
                     },
+<<<<<<< HEAD
                     "500": {
                         "description": "Internal Server Error",
+=======
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+>>>>>>> origin
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -273,21 +66,33 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/admins/users/{id}/accept": {
+=======
+        "/admin/users/{id}/accept": {
+>>>>>>> origin
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+<<<<<<< HEAD
                 "description": "Approve a pending user account",
+=======
+                "description": "Activates a user account so they can login",
+>>>>>>> origin
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Admin"
                 ],
+<<<<<<< HEAD
                 "summary": "Accept user",
+=======
+                "summary": "Accept a pending user",
+>>>>>>> origin
                 "parameters": [
                     {
                         "type": "integer",
@@ -304,6 +109,27 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.UserResponse"
                         }
                     },
+<<<<<<< HEAD
+=======
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+>>>>>>> origin
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -316,21 +142,33 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/admins/users/{id}/reject": {
+=======
+        "/admin/users/{id}/reject": {
+>>>>>>> origin
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+<<<<<<< HEAD
                 "description": "Reject a pending user account",
+=======
+                "description": "Keeps the user account inactive",
+>>>>>>> origin
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Admin"
                 ],
+<<<<<<< HEAD
                 "summary": "Reject user",
+=======
+                "summary": "Reject a pending user",
+>>>>>>> origin
                 "parameters": [
                     {
                         "type": "integer",
@@ -350,6 +188,27 @@ const docTemplate = `{
                             }
                         }
                     },
+<<<<<<< HEAD
+=======
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+>>>>>>> origin
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -396,7 +255,11 @@ const docTemplate = `{
         },
         "/auth/login": {
             "post": {
+<<<<<<< HEAD
                 "description": "Login with username and password. Inactive users cannot login.",
+=======
+                "description": "Authenticates a user and returns JWT tokens. Only active accounts can login.",
+>>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -409,7 +272,11 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
+<<<<<<< HEAD
                         "description": "Login credentials",
+=======
+                        "description": "Login request",
+>>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -444,7 +311,10 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
+<<<<<<< HEAD
                 "description": "Get the profile of the currently authenticated user",
+=======
+>>>>>>> origin
                 "produces": [
                     "application/json"
                 ],
@@ -482,7 +352,10 @@ const docTemplate = `{
         },
         "/auth/refresh": {
             "post": {
+<<<<<<< HEAD
                 "description": "Get new access/refresh token pair using a valid refresh token",
+=======
+>>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -495,7 +368,11 @@ const docTemplate = `{
                 "summary": "Refresh tokens",
                 "parameters": [
                     {
+<<<<<<< HEAD
                         "description": "Refresh token",
+=======
+                        "description": "Refresh request",
+>>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -525,7 +402,11 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
+<<<<<<< HEAD
                 "description": "Register a new user account. Account starts inactive until admin approves.",
+=======
+                "description": "Creates an inactive account pending admin approval",
+>>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -535,10 +416,17 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
+<<<<<<< HEAD
                 "summary": "Register user",
                 "parameters": [
                     {
                         "description": "Register data",
+=======
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "Register request",
+>>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -566,6 +454,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/communities/applicants/action": {
             "post": {
                 "security": [
@@ -727,6 +616,8 @@ const docTemplate = `{
                 }
             }
         },
+=======
+>>>>>>> origin
         "/projects": {
             "post": {
                 "security": [
@@ -734,7 +625,11 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
+<<<<<<< HEAD
                 "description": "Create a new project (school or community only)",
+=======
+                "description": "Create a project (community/admin)",
+>>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -747,7 +642,11 @@ const docTemplate = `{
                 "summary": "Create project",
                 "parameters": [
                     {
+<<<<<<< HEAD
                         "description": "Project data",
+=======
+                        "description": "Create project",
+>>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -772,6 +671,18 @@ const docTemplate = `{
                             }
                         }
                     },
+<<<<<<< HEAD
+=======
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+>>>>>>> origin
                     "403": {
                         "description": "Forbidden",
                         "schema": {
@@ -784,6 +695,67 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
+=======
+        "/projects/my-list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all projects available for current student's affiliation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get projects for student",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.ProjectResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Only students can access",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+>>>>>>> origin
         "/projects/{id}": {
             "patch": {
                 "security": [
@@ -791,7 +763,11 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
+<<<<<<< HEAD
                 "description": "Update a project owned by the current user",
+=======
+                "description": "Update a project (owner community/admin)",
+>>>>>>> origin
                 "consumes": [
                     "application/json"
                 ],
@@ -811,7 +787,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+<<<<<<< HEAD
                         "description": "Update fields",
+=======
+                        "description": "Update project",
+>>>>>>> origin
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -836,6 +816,7 @@ const docTemplate = `{
                             }
                         }
                     },
+<<<<<<< HEAD
                     "403": {
                         "description": "Forbidden",
                         "schema": {
@@ -1150,6 +1131,10 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+=======
+                    "401": {
+                        "description": "Unauthorized",
+>>>>>>> origin
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -1177,6 +1162,7 @@ const docTemplate = `{
                     }
                 }
             }
+<<<<<<< HEAD
         },
         "/students/applications": {
             "get": {
@@ -1447,6 +1433,14 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+=======
+        }
+    },
+    "definitions": {
+        "model.AffiliationResponse": {
+            "type": "object",
+            "properties": {
+>>>>>>> origin
                 "id": {
                     "type": "integer"
                 },
@@ -1455,6 +1449,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "model.AffiliationUpdateRequest": {
             "type": "object",
             "properties": {
@@ -1506,6 +1501,8 @@ const docTemplate = `{
                 "StatusApproved"
             ]
         },
+=======
+>>>>>>> origin
         "model.AuthResponse": {
             "type": "object",
             "properties": {
@@ -1554,9 +1551,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "form_end_day": {
+<<<<<<< HEAD
                     "type": "string"
                 },
                 "form_start_day": {
+=======
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "description": "RFC3339",
+>>>>>>> origin
                     "type": "string"
                 },
                 "name": {
@@ -1566,9 +1571,17 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "project_end_day": {
+<<<<<<< HEAD
                     "type": "string"
                 },
                 "project_start_day": {
+=======
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "description": "RFC3339",
+>>>>>>> origin
                     "type": "string"
                 }
             }
@@ -1582,9 +1595,12 @@ const docTemplate = `{
                 "affiliation_id": {
                     "type": "integer"
                 },
+<<<<<<< HEAD
                 "banner_url": {
                     "type": "string"
                 },
+=======
+>>>>>>> origin
                 "community_user": {
                     "$ref": "#/definitions/model.UserResponse"
                 },
@@ -1594,9 +1610,12 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+<<<<<<< HEAD
                 "date_approved": {
                     "type": "string"
                 },
+=======
+>>>>>>> origin
                 "description": {
                     "type": "string"
                 },
@@ -1633,9 +1652,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "form_end_day": {
+<<<<<<< HEAD
                     "type": "string"
                 },
                 "form_start_day": {
+=======
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "form_start_day": {
+                    "description": "RFC3339",
+>>>>>>> origin
                     "type": "string"
                 },
                 "name": {
@@ -1645,9 +1672,17 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "project_end_day": {
+<<<<<<< HEAD
                     "type": "string"
                 },
                 "project_start_day": {
+=======
+                    "description": "RFC3339",
+                    "type": "string"
+                },
+                "project_start_day": {
+                    "description": "RFC3339",
+>>>>>>> origin
                     "type": "string"
                 }
             }
@@ -1687,9 +1722,12 @@ const docTemplate = `{
                     "type": "string",
                     "minLength": 6
                 },
+<<<<<<< HEAD
                 "phone": {
                     "type": "string"
                 },
+=======
+>>>>>>> origin
                 "role": {
                     "enum": [
                         "admin",
@@ -1743,6 +1781,7 @@ const docTemplate = `{
                 "RoleCommunity"
             ]
         },
+<<<<<<< HEAD
         "model.StudentProjectResponse": {
             "type": "object",
             "properties": {
@@ -1769,6 +1808,8 @@ const docTemplate = `{
                 }
             }
         },
+=======
+>>>>>>> origin
         "model.UserResponse": {
             "type": "object",
             "properties": {
@@ -1778,9 +1819,12 @@ const docTemplate = `{
                 "affiliation_id": {
                     "type": "integer"
                 },
+<<<<<<< HEAD
                 "avatar_url": {
                     "type": "string"
                 },
+=======
+>>>>>>> origin
                 "email": {
                     "type": "string"
                 },
@@ -1793,9 +1837,12 @@ const docTemplate = `{
                 "is_active": {
                     "type": "boolean"
                 },
+<<<<<<< HEAD
                 "phone": {
                     "type": "string"
                 },
+=======
+>>>>>>> origin
                 "role": {
                     "$ref": "#/definitions/model.Role"
                 },
@@ -1806,6 +1853,7 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+<<<<<<< HEAD
         },
         "model.UserUpdateRequest": {
             "type": "object",
@@ -1817,6 +1865,8 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+=======
+>>>>>>> origin
         }
     },
     "securityDefinitions": {
