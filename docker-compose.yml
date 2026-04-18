@@ -1,19 +1,15 @@
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: register_system
+  api:
+    build: .
+    container_name: register_system_api
     ports:
-      - "5432:5432"
+      - "8080:8080"
+    env_file:
+      - .env
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      # ảnh đã up lên sẽ được mount lại 
+      - ./uploads:/app/uploads
+    restart: unless-stopped
 
 volumes:
   pgdata:
