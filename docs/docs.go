@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/affiliations": {
+        "/admins/affiliations": {
             "post": {
                 "security": [
                     {
@@ -63,7 +63,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/affiliations/{id}": {
+        "/admins/affiliations/{id}": {
             "delete": {
                 "security": [
                     {
@@ -162,7 +162,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/applications": {
+        "/admins/applications": {
             "get": {
                 "security": [
                     {
@@ -199,7 +199,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/projects": {
+        "/admins/projects": {
             "get": {
                 "security": [
                     {
@@ -236,7 +236,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/pending": {
+        "/admins/users/pending": {
             "get": {
                 "security": [
                     {
@@ -273,7 +273,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/{id}/accept": {
+        "/admins/users/{id}/accept": {
             "post": {
                 "security": [
                     {
@@ -316,7 +316,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/{id}/reject": {
+        "/admins/users/{id}/reject": {
             "post": {
                 "security": [
                     {
@@ -566,7 +566,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/applicants/action": {
+        "/communities/applicants/action": {
             "post": {
                 "security": [
                     {
@@ -626,7 +626,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/projects": {
+        "/communities/projects": {
             "get": {
                 "security": [
                     {
@@ -672,7 +672,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/community/projects/{id}/applicants": {
+        "/communities/projects/{id}/applicants": {
             "get": {
                 "security": [
                     {

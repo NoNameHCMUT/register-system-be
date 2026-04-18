@@ -54,6 +54,14 @@ func (b *applicationBusiness) Apply(studentID uint, projectID uint) (*model.Stud
 		return nil, errors.New("not within form registration period")
 	}
 
+	cnt, err := b.projectRepo.CountAttending(projectID)
+	if err != nil {
+		return nil, errors.New("failed to check project capacity")
+	}
+	if cnt >= project.NumMax {
+		return nil, errors.New("project has reached maximum number of participants")
+	}
+
 	existing, _ := b.applicationRepo.FindByStudentAndProject(studentID, projectID)
 	if existing != nil {
 		return nil, errors.New("already applied to this project")

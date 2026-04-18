@@ -9,7 +9,7 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/admin/affiliations": {
+        "/admins/affiliations": {
             "post": {
                 "security": [
                     {
@@ -57,7 +57,7 @@
                 }
             }
         },
-        "/admin/affiliations/{id}": {
+        "/admins/affiliations/{id}": {
             "delete": {
                 "security": [
                     {
@@ -156,7 +156,7 @@
                 }
             }
         },
-        "/admin/applications": {
+        "/admins/applications": {
             "get": {
                 "security": [
                     {
@@ -193,7 +193,7 @@
                 }
             }
         },
-        "/admin/projects": {
+        "/admins/projects": {
             "get": {
                 "security": [
                     {
@@ -230,7 +230,7 @@
                 }
             }
         },
-        "/admin/users/pending": {
+        "/admins/users/pending": {
             "get": {
                 "security": [
                     {
@@ -267,7 +267,7 @@
                 }
             }
         },
-        "/admin/users/{id}/accept": {
+        "/admins/users/{id}/accept": {
             "post": {
                 "security": [
                     {
@@ -310,7 +310,7 @@
                 }
             }
         },
-        "/admin/users/{id}/reject": {
+        "/admins/users/{id}/reject": {
             "post": {
                 "security": [
                     {
@@ -560,7 +560,7 @@
                 }
             }
         },
-        "/community/applicants/action": {
+        "/communities/applicants/action": {
             "post": {
                 "security": [
                     {
@@ -620,7 +620,7 @@
                 }
             }
         },
-        "/community/projects": {
+        "/communities/projects": {
             "get": {
                 "security": [
                     {
@@ -666,7 +666,7 @@
                 }
             }
         },
-        "/community/projects/{id}/applicants": {
+        "/communities/projects/{id}/applicants": {
             "get": {
                 "security": [
                     {

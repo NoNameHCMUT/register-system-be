@@ -272,7 +272,7 @@ info:
   title: Register System API
   version: "1.0"
 paths:
-  /admin/affiliations:
+  /admins/affiliations:
     post:
       consumes:
       - application/json
@@ -302,7 +302,7 @@ paths:
       summary: Create affiliation
       tags:
       - Admin
-  /admin/affiliations/{id}:
+  /admins/affiliations/{id}:
     delete:
       description: Remove an affiliation by ID
       parameters:
@@ -365,7 +365,7 @@ paths:
       summary: Update affiliation
       tags:
       - Admin
-  /admin/applications:
+  /admins/applications:
     get:
       description: Admin view of all student applications
       produces:
@@ -388,7 +388,7 @@ paths:
       summary: List all applications
       tags:
       - Admin
-  /admin/projects:
+  /admins/projects:
     get:
       description: Admin master view of all projects
       produces:
@@ -411,7 +411,7 @@ paths:
       summary: List all projects
       tags:
       - Admin
-  /admin/users/{id}/accept:
+  /admins/users/{id}/accept:
     post:
       description: Approve a pending user account
       parameters:
@@ -438,7 +438,7 @@ paths:
       summary: Accept user
       tags:
       - Admin
-  /admin/users/{id}/reject:
+  /admins/users/{id}/reject:
     post:
       description: Reject a pending user account
       parameters:
@@ -467,7 +467,7 @@ paths:
       summary: Reject user
       tags:
       - Admin
-  /admin/users/pending:
+  /admins/users/pending:
     get:
       description: Get all users awaiting approval
       produces:
@@ -623,7 +623,7 @@ paths:
       summary: Register user
       tags:
       - Auth
-  /community/applicants/action:
+  /communities/applicants/action:
     post:
       consumes:
       - application/json
@@ -661,7 +661,7 @@ paths:
       summary: Community action on applications
       tags:
       - Community
-  /community/projects:
+  /communities/projects:
     get:
       description: Get all approved projects for the community's affiliation
       produces:
@@ -690,7 +690,7 @@ paths:
       summary: List community projects
       tags:
       - Community
-  /community/projects/{id}/applicants:
+  /communities/projects/{id}/applicants:
     get:
       description: Get all applications for a project (community view)
       parameters:
