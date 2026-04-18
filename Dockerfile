@@ -6,7 +6,10 @@ COPY . .
 RUN CGO_ENABLED=0 go build -o /server ./cmd/server
 
 FROM alpine:3.19
-RUN apk add --no-cache ca-certificates
-COPY --from=builder /server /server
+RUN apk add --no-cache ca-certificates tzdata
+
+WORKDIR /app
+COPY --from=builder /server ./server
+
 EXPOSE 8080
-CMD ["/server"]
+CMD ["./server"]
