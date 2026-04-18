@@ -18,40 +18,6 @@ func NewApplicationHandler(biz business.ApplicationBusiness) *ApplicationHandler
 	return &ApplicationHandler{biz: biz}
 }
 
-// @Summary      Apply to project
-// @Description  Student applies to a project by its ID
-// @Tags         Student
-// @Produce      json
-// @Security     BearerAuth
-// @Param        id path int true "Project ID"
-// @Success      201 {object} model.StudentProjectResponse
-// @Failure      400 {object} map[string]string
-// @Failure      403 {object} map[string]string
-// @Failure      404 {object} map[string]string
-// @Router       /students/projects/{id}/apply [post]
-func (h *ApplicationHandler) Apply(c *gin.Context) {
-	projectID, err := strconv.ParseUint(c.Param("id"), 10, 32)
-	if err != nil {
-		Error(c, http.StatusBadRequest, "invalid project id")
-		return
-	}
-
-	res, err := h.biz.Apply(GetUserID(c), uint(projectID))
-	if err != nil {
-		switch err.Error() {
-		case "permission denied":
-			Error(c, http.StatusForbidden, err.Error())
-		case "project not found":
-			Error(c, http.StatusNotFound, err.Error())
-		default:
-			Error(c, http.StatusBadRequest, err.Error())
-		}
-		return
-	}
-
-	Created(c, res)
-}
-
 // @Summary      List student applications
 // @Description  Get all applications submitted by the current student
 // @Tags         Student
@@ -103,6 +69,35 @@ func (h *ApplicationHandler) ListByProjectForSchool(c *gin.Context) {
 	Success(c, apps)
 }
 
+// @Summary      List applicants for community
+// @Description  Get all applications for a project (community view)
+// @Tags         Community
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id path int true "Project ID"
+// @Success      200 {array} model.StudentProjectResponse
+// @Failure      400 {object} map[string]string
+// @Failure      403 {object} map[string]string
+// @Router       /communities/projects/{id}/applicants [get]
+func (h *ApplicationHandler) ListByProjectForCommunity(c *gin.Context) {
+	projectID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		Error(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+
+	apps, err := h.biz.ListByProjectForCommunity(GetUserID(c), uint(projectID))
+	if err != nil {
+		if err.Error() == "permission denied" {
+			Error(c, http.StatusForbidden, err.Error())
+			return
+		}
+		Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	Success(c, apps)
+}
+
 // @Summary      School action on applications
 // @Description  Batch accept or reject applications as a school
 // @Tags         School
@@ -133,33 +128,38 @@ func (h *ApplicationHandler) SchoolAction(c *gin.Context) {
 	Success(c, gin.H{"message": "action processed", "updated": updated})
 }
 
-// @Summary      List applicants for community
-// @Description  Get all applications for a project (community view)
-// @Tags         Community
+// @Summary      Apply to project
+// @Description  Student applies to a project by its ID
+// @Tags         Student
 // @Produce      json
 // @Security     BearerAuth
 // @Param        id path int true "Project ID"
-// @Success      200 {array} model.StudentProjectResponse
+// @Success      201 {object} model.StudentProjectResponse
 // @Failure      400 {object} map[string]string
 // @Failure      403 {object} map[string]string
-// @Router       /communities/projects/{id}/applicants [get]
-func (h *ApplicationHandler) ListByProjectForCommunity(c *gin.Context) {
+// @Failure      404 {object} map[string]string
+// @Router       /students/projects/{id}/apply [post]
+func (h *ApplicationHandler) Apply(c *gin.Context) {
 	projectID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		Error(c, http.StatusBadRequest, "invalid project id")
 		return
 	}
 
-	apps, err := h.biz.ListByProjectForCommunity(GetUserID(c), uint(projectID))
+	res, err := h.biz.Apply(GetUserID(c), uint(projectID))
 	if err != nil {
-		if err.Error() == "permission denied" {
+		switch err.Error() {
+		case "permission denied":
 			Error(c, http.StatusForbidden, err.Error())
-			return
+		case "project not found":
+			Error(c, http.StatusNotFound, err.Error())
+		default:
+			Error(c, http.StatusBadRequest, err.Error())
 		}
-		Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	Success(c, apps)
+
+	Created(c, res)
 }
 
 // @Summary      Community action on applications

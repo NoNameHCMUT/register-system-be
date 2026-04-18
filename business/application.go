@@ -3,7 +3,7 @@ package business
 import (
 	"errors"
 	"time"
-
+	"fmt"
 	"register-system-be/email"
 	"register-system-be/model"
 	"register-system-be/repo"
@@ -220,6 +220,7 @@ func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.Applica
 		if project.AffiliationID != user.AffiliationID {
 			continue
 		}
+		fmt.Printf("Test $v", err)
 		if err := b.applicationRepo.UpdateStatus(id, targetStatus); err != nil {
 			continue
 		}
