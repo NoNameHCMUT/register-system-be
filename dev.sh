@@ -50,7 +50,7 @@ run() {
 }
 
 dev() {
-    if ! command -v air &> /dev/null; then
+    if ! command -v $(go env GOPATH)/bin/air &> /dev/null; then
         warn "air not installed. Installing..."
         go install github.com/air-verse/air@latest
     fi
@@ -70,13 +70,6 @@ build() {
 seed() {
     setup_env
     start_db
-    info "Running migrations..."
-    go run ./cmd/server &
-    SERVER_PID=$!
-    sleep 3
-    kill $SERVER_PID 2>/dev/null
-    wait $SERVER_PID 2>/dev/null
-    info "Seeding database..."
     npm install
     node seed.js
 }
@@ -112,11 +105,11 @@ test() {
 
 lint() {
     info "Running golangci-lint..."
-    if ! command -v golangci-lint &> /dev/null && [ ! -f "$(go env GOPATH)/bin/golangci-lint" ]; then
+    if ! command -v $(go env GOPATH)/bin/golangci-lint &> /dev/null && [ ! -f "$(go env GOPATH)/bin/golangci-lint" ]; then
         warn "golangci-lint not installed. Installing..."
         go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
     fi
-    golangci-lint run ./...
+    $(go env GOPATH)/bin/golangci-lint run ./...
 }
 
 ci() {
