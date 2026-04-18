@@ -81,6 +81,9 @@ func (b *adminBusiness) RejectUser(userID uint) error {
 	if err := b.userRepo.UpdateActive(userID, false); err != nil {
 		return err
 	}
+	if err := b.userRepo.RemoveUser(userID); err != nil {
+		return err
+	}
 	go func() { _ = email.NotifyAccountStatus(b.emailSender, user.Email, false) }()
 	return nil
 }
