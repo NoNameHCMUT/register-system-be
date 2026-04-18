@@ -14,8 +14,8 @@ type ApplicationBusiness interface {
 	ListByStudent(studentID uint) ([]model.StudentProjectResponse, error)
 	ListByProjectForSchool(schoolUserID uint, projectID uint) ([]model.StudentProjectResponse, error)
 	ListByProjectForCommunity(communityUserID uint, projectID uint) ([]model.StudentProjectResponse, error)
-	SchoolAction(schoolUserID uint, req *model.ApplicationActionRequest) error
-	CommunityAction(communityUserID uint, req *model.ApplicationActionRequest) error
+	SchoolAction(schoolUserID uint, req *model.ApplicationActionRequest) (int, error)
+	CommunityAction(communityUserID uint, req *model.ApplicationActionRequest) (int, error)
 }
 
 type applicationBusiness struct {
@@ -184,13 +184,13 @@ func (b *applicationBusiness) ListByProjectForCommunity(communityUserID uint, pr
 	return res, nil
 }
 
-func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.ApplicationActionRequest) error {
+func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.ApplicationActionRequest) (int, error) {
 	user, err := b.userRepo.FindByID(schoolUserID)
 	if err != nil {
-		return errors.New("user not found")
+		return 0, errors.New("user not found")
 	}
 	if user.Role != model.RoleSchool {
-		return errors.New("permission denied")
+		return 0, errors.New("permission denied")
 	}
 
 	var targetStatus model.ApplicationStatus
@@ -204,6 +204,7 @@ func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.Applica
 		expectedCurrent = model.StatusSchoolPending
 	}
 
+	updated := 0
 	for _, id := range req.ApplicationIDs {
 		app, err := b.applicationRepo.FindByID(id)
 		if err != nil {
@@ -219,7 +220,10 @@ func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.Applica
 		if project.AffiliationID != user.AffiliationID {
 			continue
 		}
-		_ = b.applicationRepo.UpdateStatus(id, targetStatus)
+		if err := b.applicationRepo.UpdateStatus(id, targetStatus); err != nil {
+			continue
+		}
+		updated++
 
 		appUser, err := b.userRepo.FindByID(app.UserID)
 		if err == nil {
@@ -229,16 +233,16 @@ func (b *applicationBusiness) SchoolAction(schoolUserID uint, req *model.Applica
 		}
 	}
 
-	return nil
+	return updated, nil
 }
 
-func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.ApplicationActionRequest) error {
+func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.ApplicationActionRequest) (int, error) {
 	user, err := b.userRepo.FindByID(communityUserID)
 	if err != nil {
-		return errors.New("user not found")
+		return 0, errors.New("user not found")
 	}
 	if user.Role != model.RoleCommunity {
-		return errors.New("permission denied")
+		return 0, errors.New("permission denied")
 	}
 
 	var targetStatus model.ApplicationStatus
@@ -249,6 +253,7 @@ func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.A
 		targetStatus = model.StatusCommunityReject
 	}
 
+	updated := 0
 	for _, id := range req.ApplicationIDs {
 		app, err := b.applicationRepo.FindByID(id)
 		if err != nil {
@@ -264,7 +269,10 @@ func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.A
 		if project.CommunityUserID != communityUserID {
 			continue
 		}
-		_ = b.applicationRepo.UpdateStatus(id, targetStatus)
+		if err := b.applicationRepo.UpdateStatus(id, targetStatus); err != nil {
+			continue
+		}
+		updated++
 
 		appUser, err := b.userRepo.FindByID(app.UserID)
 		if err == nil {
@@ -274,5 +282,5 @@ func (b *applicationBusiness) CommunityAction(communityUserID uint, req *model.A
 		}
 	}
 
-	return nil
+	return updated, nil
 }

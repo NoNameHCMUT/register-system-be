@@ -32,7 +32,7 @@ func (r *applicationRepo) Create(sp *model.StudentProject) error {
 
 func (r *applicationRepo) FindByID(id uint) (*model.StudentProject, error) {
 	var sp model.StudentProject
-	if err := r.db.Preload("User").Preload("Project").First(&sp, id).Error; err != nil {
+	if err := r.db.Preload("User").Preload("Project.Affiliation").Preload("Project.CommunityUser").First(&sp, id).Error; err != nil {
 		return nil, err
 	}
 	return &sp, nil
@@ -50,7 +50,7 @@ func (r *applicationRepo) FindByStudentID(userID uint) ([]model.StudentProject, 
 
 func (r *applicationRepo) FindByProjectID(projectID uint) ([]model.StudentProject, error) {
 	var apps []model.StudentProject
-	if err := r.db.Preload("User").Preload("Project").
+	if err := r.db.Preload("User").Preload("Project.Affiliation").Preload("Project.CommunityUser").
 		Where("project_id = ?", projectID).
 		Find(&apps).Error; err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (r *applicationRepo) FindByProjectID(projectID uint) ([]model.StudentProjec
 
 func (r *applicationRepo) FindByProjectIDAndStatus(projectID uint, status model.ApplicationStatus) ([]model.StudentProject, error) {
 	var apps []model.StudentProject
-	if err := r.db.Preload("User").Preload("Project").
+	if err := r.db.Preload("User").Preload("Project.Affiliation").Preload("Project.CommunityUser").
 		Where("project_id = ? AND status = ?", projectID, status).
 		Find(&apps).Error; err != nil {
 		return nil, err

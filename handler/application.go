@@ -120,7 +120,8 @@ func (h *ApplicationHandler) SchoolAction(c *gin.Context) {
 		return
 	}
 
-	if err := h.biz.SchoolAction(GetUserID(c), req); err != nil {
+	updated, err := h.biz.SchoolAction(GetUserID(c), req)
+	if err != nil {
 		if err.Error() == "permission denied" {
 			Error(c, http.StatusForbidden, err.Error())
 			return
@@ -129,7 +130,7 @@ func (h *ApplicationHandler) SchoolAction(c *gin.Context) {
 		return
 	}
 
-	Success(c, gin.H{"message": "action processed"})
+	Success(c, gin.H{"message": "action processed", "updated": updated})
 }
 
 // @Summary      List applicants for community
@@ -178,7 +179,8 @@ func (h *ApplicationHandler) CommunityAction(c *gin.Context) {
 		return
 	}
 
-	if err := h.biz.CommunityAction(GetUserID(c), req); err != nil {
+	updated, err := h.biz.CommunityAction(GetUserID(c), req)
+	if err != nil {
 		if err.Error() == "permission denied" {
 			Error(c, http.StatusForbidden, err.Error())
 			return
@@ -187,5 +189,5 @@ func (h *ApplicationHandler) CommunityAction(c *gin.Context) {
 		return
 	}
 
-	Success(c, gin.H{"message": "action processed"})
+	Success(c, gin.H{"message": "action processed", "updated": updated})
 }
