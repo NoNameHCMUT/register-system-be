@@ -35,6 +35,23 @@ func (h *AdminHandler) ListPending(c *gin.Context) {
 	Success(c, users)
 }
 
+// @Summary      List active users
+// @Description  Get all active users (is_active=true)
+// @Tags         Admin
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {array} model.UserResponse
+// @Failure      500 {object} map[string]string
+// @Router       /admins/users/active [get]
+func (h *AdminHandler) ListActiveUsers(c *gin.Context) {
+	users, err := h.biz.ListActiveUsers()
+	if err != nil {
+		Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	Success(c, users)
+}
+
 // @Summary      Accept user
 // @Description  Approve a pending user account
 // @Tags         Admin

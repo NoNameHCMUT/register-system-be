@@ -12,6 +12,7 @@ type UserRepo interface {
 	FindByEmail(email string) (*model.User, error)
 	FindByID(id uint) (*model.User, error)
 	FindPending() ([]model.User, error)
+	FindActive() ([]model.User, error)
 	UpdateActive(userID uint, active bool) error
 	UpdateRefreshToken(userID uint, token string) error
 	UpdateProfile(userID uint, phone string, avatarURL string) error
@@ -58,6 +59,14 @@ func (r *userRepo) FindByID(id uint) (*model.User, error) {
 func (r *userRepo) FindPending() ([]model.User, error) {
 	var users []model.User
 	if err := r.db.Preload("Affiliation").Where("is_active = ?", false).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (r *userRepo) FindActive() ([]model.User, error) {
+	var users []model.User
+	if err := r.db.Preload("Affiliation").Where("is_active = ?", true).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
